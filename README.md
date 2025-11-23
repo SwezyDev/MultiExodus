@@ -53,7 +53,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * 📦 Dependencies:
 
   ```bash
-  pip install pillow, customtkinter
+  pip install pillow customtkinter
   ```
 * 💾 Access to your Exodus installation directory and multi-wallet folder (ensure the app has permission to read/write files).
 * 🖼️ Optional: PNG images for custom wallet previews.
