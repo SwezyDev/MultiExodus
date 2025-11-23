@@ -53,7 +53,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * 📦 Dependencies:
 
   ```bash
-  pip install ...
+  pip install pillow, customtkinter
   ```
 * 💾 Access to your Exodus installation directory and multi-wallet folder (ensure the app has permission to read/write files).
 * 🖼️ Optional: PNG images for custom wallet previews.
@@ -92,7 +92,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ## 🖼️ Preview
 
 <p align="center">
-  <img src="https://img.shields.io/badge/UI-Gradient%20CLI-blueviolet?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/CustomTkinter-%20GUI-blueviolet?style=for-the-badge"/>
   <br><br>
   <img src="https://github.com/SwezyDev/MultiExodus/blob/main/assets/preview.png?raw=true" alt="Program preview">
 </p>
@@ -103,7 +103,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 
 How i found the trigger to enter the Recovery Mode:
 
-
+<img width="753" height="652" alt="Screenshot 2025-11-23 045631" src="https://github.com/user-attachments/assets/b6677ffe-091b-4d31-a41a-316303f1d9b9" />
 
 You can see that a file was created by Exodus called `restore-mnemonic` in the `%appdata%\Exodus` directory.
 
