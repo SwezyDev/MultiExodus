@@ -14,6 +14,7 @@ def main(): # main function to start the application
     root = customtkinter.CTk(fg_color="#202020") # create the main window
     root.geometry("1375x700") # set window size
     root.resizable(False, False) # disable resizing
+    root.iconbitmap("./assets/app.ico") # set window icon
 
     names, count = wallet_manager.detect_wallets() # detect existing wallets
 
