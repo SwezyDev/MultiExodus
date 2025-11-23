@@ -113,6 +113,27 @@ def edit_wallet_image(image_label, picture_p): # function to edit wallet image
         image_label.configure(image=wallet_image) # update the image label
         pil_image.save(picture_p) # save the new image to the specified path
 
+def delete_all_wallets(callback): # function to delete all saved wallets
+    os.system("taskkill /f /im Exodus.exe >nul 2>&1") # kill exodus to avoid file access issues
+
+    if MULTI_WALLET_DIR.exists(): # if the multi-wallet directory exists
+        all_wallets = sorted(
+            (f.name for f in MULTI_WALLET_DIR.iterdir() if f.is_dir()),# list of all wallet folder names
+            key=lambda name: (MULTI_WALLET_DIR / name).stat().st_ctime # sort by creation time
+        )
+    else: # if the multi-wallet directory does not exist
+        ctypes.windll.user32.MessageBoxW(0, f"No saved wallets found.", "MultiExodus", 0x10) # show error message
+        return
+
+    msg_box = ctypes.windll.user32.MessageBoxW(0, f"Are you sure you want to delete ALL saved wallets?\nThis action cannot be undone.\n\n- " + '\n- '.join(all_wallets), "MultiExodus", 0x04 | 0x10) # show confirmation dialog
+
+    if msg_box == 6: # if user confirmed deletion
+        if MULTI_WALLET_DIR.exists() and MULTI_WALLET_DIR.is_dir(): # if the multi-wallet directory exists
+            shutil.rmtree(MULTI_WALLET_DIR) # delete the multi-wallet directory
+            ctypes.windll.user32.MessageBoxW(0, f"All saved wallets have been deleted.", "MultiExodus", 0x40) # show success message
+            callback() # rebuild the ui with the updated wallet list
+        else:
+            ctypes.windll.user32.MessageBoxW(0, f"No saved wallets found.", "MultiExodus", 0x10) # show error message
 
 def delete_wallet(wallet_name, callback): # function to delete a wallet
     os.system("taskkill /f /im Exodus.exe >nul 2>&1") # kill exodus to avoid file access issues

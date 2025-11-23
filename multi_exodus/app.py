@@ -1,7 +1,8 @@
-from . import wallet_manager, ui
+from . import wallet_manager, ui, info
 from datetime import datetime
 import customtkinter
 import threading
+import requests
 import time
 
 def title_updater(root): # function to update the window title with wallet count and current time
@@ -29,6 +30,23 @@ def main(): # main function to start the application
 
     threading.Thread(target=title_updater, args=(root,), daemon=True).start() # start title updater thread
 
-    ui.build_wallets_ui(root, names, count) # build the wallets UI
+    ui.build_wallets_ui(root, names, count) # build the wallets ui
+
+    with open("./assets/info.txt", "r", encoding="utf-8") as f: # load info text from file
+        info_text = f.read()
+
+    first_wallet = names[0] if names else "" # get the first wallet name for delete binding
+
+    root.bind("<Escape>", lambda e: root.quit()) # bind escape key to quit the app
+    root.bind("<F5>", lambda e: ui.rebuild(root)) # bind F5 key to refresh the wallets ui
+    root.bind("<F1>", lambda e: info.InfoPopup(root, 
+                                            title="Multi Exodus Information", text=info_text, text_color="#FFFFFF",
+                                            fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind F1 key to show info popup
+    
+    root.bind("+", lambda e: wallet_manager.add_wallet(root, lambda r=root: ui.build_wallets_ui(root, *wallet_manager.detect_wallets()))) # bind + key to add a new wallet
+    root.bind("-", lambda e: wallet_manager.delete_wallet(first_wallet, ui.rebuild(root))) # bind - key to delete a walletq
+    root.bind("*", lambda e: wallet_manager.load_wallet(first_wallet)) # bind * key to load a wallet
+    root.bind("<Delete>", lambda e: wallet_manager.delete_all_wallets(lambda: ui.rebuild(root))) # bind delete key to delete all saved wallets
+
 
     root.mainloop() # start the main event loop

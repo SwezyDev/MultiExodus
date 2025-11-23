@@ -1,0 +1,22 @@
+                            Multi Exodus
+
+MultiExodus is a Python-based utility designed to manage multiple Exodus wallets. It allows users to import, backup, edit, and switch wallets through a clean and intuitive graphical interface built with CustomTkinter.
+
+The application provides features such as wallet detection, seed phrase recovery automation, image and note customization, and one-click wallet loading into Exodus. Each wallet is stored in a dedicated folder, enabling safe backups and easy organization. The program also implements confirmation dialogs and automated restoration triggers to ensure safe wallet operations.
+
+MultiExodus leverages PIL for image handling, OS-level commands for wallet management, and scrollable, grid-based UI frames for efficient display and interaction with multiple wallets.
+
+This project is unofficial and is not affiliated with any vendor. It is meant for personal use only.
+
+Distributed under the MIT License.
+
+ESC: Close Window
+DEL: Delete all Wallets
+F1: Show this Information Box
+F5: Reload Wallets
++: Add a Wallet
+-: Delete the oldest Wallet
+*: Load oldest Wallet
+
+GitHub: https://github.com/SwezyDev/MultiExodus
+Contact: https://t.me/Swezy
