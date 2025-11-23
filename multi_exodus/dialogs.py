@@ -51,7 +51,7 @@ class MyInputDialog(customtkinter.CTkToplevel):
 
         self.protocol("WM_DELETE_WINDOW", self.cancel)
 
-        self.bind("<Enter>", lambda e: self.ok())
+        self.bind("<Return>", lambda e: self.ok())
         self.bind("<Escape>", lambda e: self.cancel())
 
         self.wait_window()
