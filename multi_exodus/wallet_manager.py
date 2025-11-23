@@ -113,6 +113,14 @@ def edit_wallet_image(image_label, picture_p): # function to edit wallet image
         image_label.configure(image=wallet_image) # update the image label
         pil_image.save(picture_p) # save the new image to the specified path
 
+def open_wallet(wallet_name): # function to open the wallet folder in file explorer
+    target_folder = MULTI_WALLET_DIR / wallet_name # path to the wallet folder
+    if target_folder.exists() and target_folder.is_dir(): # if the wallet folder exists
+        os.startfile(target_folder) # open the wallet folder in file explorer
+    else:
+        ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' does not exist.", "MultiExodus", 0x10) # show error message
+
+
 def delete_all_wallets(callback): # function to delete all saved wallets
     os.system("taskkill /f /im Exodus.exe >nul 2>&1") # kill exodus to avoid file access issues
 
