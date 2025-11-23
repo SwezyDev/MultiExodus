@@ -92,7 +92,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ## 🖼️ Preview
 
 <p align="center">
-  <img src="https://img.shields.io/badge/UI-Gradient%20CLI-blueviolet?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/CustomTkinter-%20GUI-blueviolet?style=for-the-badge"/>
   <br><br>
   <img src="https://github.com/SwezyDev/MultiExodus/blob/main/assets/preview.png?raw=true" alt="Program preview">
 </p>
