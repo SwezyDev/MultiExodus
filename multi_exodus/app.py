@@ -7,7 +7,7 @@ import time
 def title_updater(root): # function to update the window title with wallet count and current time
     while True: # loop for ever lol
         names, count = wallet_manager.detect_wallets() # update wallet count
-        root.title(f"MultiExodus - {count} Loaded Wallets | {datetime.now().strftime('%H:%M:%S')}") # update title with wallet count and current time
+        root.title(f"MultiExodus - {count} Loaded Wallet{'s' if count != 1 else ''} | {datetime.now().strftime('%H:%M:%S')}") # update title with wallet count and current time
         time.sleep(1) # Update every second
 
 def center_me(root, width, height): # function to center the window on the screen
