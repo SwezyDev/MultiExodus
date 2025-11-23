@@ -73,6 +73,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
   ```bash
   pip install pillow customtkinter
   ```
+* 💻 [Exodus](https://www.exodus.com/download) installed and working.
 * 💾 Access to your Exodus installation directory and multi-wallet folder (ensure the app has permission to read/write files).
 * 🖼️ Optional: PNG images for custom wallet previews. (Recommended size: 130x130)
 
