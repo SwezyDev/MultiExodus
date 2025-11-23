@@ -137,7 +137,7 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ## 🚨 Disclaimer
 
-This project is **unofficial** and is **not** affiliated with any vendor. It is meant for **educational, analysis, and recovery** tasks only. Use responsibly and legally.
+This project is **unofficial** and is **not** affiliated with any vendor. It is meant for **personal use** only.
 
 ---
 
