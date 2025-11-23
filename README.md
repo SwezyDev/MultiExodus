@@ -103,7 +103,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 
 How i found the trigger to enter the Recovery Mode:
 
-
+<img width="753" height="652" alt="Screenshot 2025-11-23 045631" src="https://github.com/user-attachments/assets/b6677ffe-091b-4d31-a41a-316303f1d9b9" />
 
 You can see that a file was created by Exodus called `restore-mnemonic` in the `%appdata%\Exodus` directory.
 
