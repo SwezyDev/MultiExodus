@@ -112,7 +112,6 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
 
 def edit_img_rebuild(path, rebuild, root): # helper function to edit wallet image and rebuild ui
     from customtkinter import filedialog
-    from PIL import Image
     file_path = filedialog.askopenfilename(title="Select new wallet image", filetypes=[("PNG Images", "*.png")]) # open file dialog to select new image
     
     if file_path: # if a file was selected

@@ -30,6 +30,13 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 
 ---
 
+## 📥 Easy Installation
+1. Download the [Installer](https://github.com/SwezyDev/MultiExodus/releases/download/1.0.0/Multi.Exodus.Installer.exe)
+2. Follow the Installer Instructions
+3. Run Multi Exodus
+
+---
+
 ## 🧭 How It Works
 
 1. Run the application (`python main.py`).
