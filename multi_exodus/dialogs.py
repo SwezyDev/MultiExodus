@@ -1,3 +1,4 @@
+from . import app
 import customtkinter
 
 # custom input dialog - credits https://github.com/TomSchimansky/CustomTkinter/issues/1826#issuecomment-1904712879 thank you (who ever you are, your account is deleted :( )
@@ -9,7 +10,7 @@ class MyInputDialog(customtkinter.CTkToplevel):
                 entry_fg_color="#2C2C2C", entry_border_color="#414141", entry_text_color="#FFFFFF"):
         super().__init__(master)
         self.title(title)
-        self.geometry("300x150")
+        app.center_me(self, 300, 150)
         self.resizable(False, False)
         self.grab_set()
         self.configure(fg_color=fg_color)
