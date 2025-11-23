@@ -132,6 +132,9 @@ def load_wallet(wallet_name): # function to load a wallet into Exodus
     if (EXODUS_WALLET / "exodus.wallet").exists(): # if there is an existing exodus wallet
         shutil.rmtree(EXODUS_WALLET / "exodus.wallet") # remove existing exodus wallet folder
 
-    shutil.copytree(target_folder, EXODUS_WALLET / "exodus.wallet") # copy the selected wallet to the exodus wallet folder
+    def ignore_files(dir, files):
+        return [f for f in files if f in ("note.txt", "title.png")] # ignore note and title image files when copying
+
+    shutil.copytree(target_folder, EXODUS_WALLET / "exodus.wallet", ignore=ignore_files) # copy the selected wallet to the exodus wallet folder
     ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' has been loaded into Exodus.\nYou can now launch Exodus to access it.", "MultiExodus", 0x40) # show success message
     os.startfile(EXODUS_DIR / "Exodus.exe") # launch exodus
