@@ -40,9 +40,12 @@ def add_wallet(root, callback): # function to add a new wallet
 
     if msg_box == 6: # if user clicked "Yes"
         if (EXODUS_WALLET / "exodus.wallet").exists(): # if there is an existing wallet
-            msg_box2 = ctypes.windll.user32.MessageBoxW(0, f"Do you want to backup your current wallet before proceeding?\n\nThe backup will be stored at:\n{backup_wallet}\n\nProceed with backup?", "MultiExodus", 0x04 | 0x40) # show backup confirmation dialog
+            msg_box2 = ctypes.windll.user32.MessageBoxW(0, f"Do you want to backup your current wallet before proceeding?\n\nThe backup will be stored at:\n{backup_wallet}\n\nProceed with backup?\n\nYes = Create a Backup\nNo = Skip Backup\nCancel = Import this Wallet", "MultiExodus", 0x03 | 0x30) # show backup confirmation dialog
             if msg_box2 == 6: # if user clicked "Yes" to backup
                 shutil.copytree(EXODUS_WALLET / "exodus.wallet", backup_wallet, dirs_exist_ok=True) # backup the current wallet
+            elif msg_box2 == 2: # if user clicked "Cancel" to import wallet
+                import_wallet(root, callback) # call the import wallet function
+                return # exit the add_wallet function
 
         restore_file = EXODUS_WALLET / "restore-mnemonic" # path to the restore mnemonic file
         restore_file.write_text("") # create an empty restore mnemonic file to trigger recovery mode | i found this trigger with ProcMon (https://learn.microsoft.com/de-de/sysinternals/downloads/procmon)
@@ -53,32 +56,35 @@ def add_wallet(root, callback): # function to add a new wallet
 
         os.system("taskkill /f /im Exodus.exe >nul 2>&1") # kill exodus after restoration
 
-        dialog = MyInputDialog(master=root, title="Edit Wallet Name", text="Enter new name:") # prompt for new wallet name
-
-        new_name = dialog.get_input() # get the inputted wallet name
-        if new_name and new_name.strip() != "": # if a valid name was provided
-            target_folder = MULTI_WALLET_DIR / new_name # path for the new wallet folder
-
-            if target_folder.exists(): # if a wallet with this name already exists
-                ctypes.windll.user32.MessageBoxW(0, "A wallet with this name already exists.", "MultiExodus", 0x10) # show error message
-                return # exit the function
-
-            if not (EXODUS_WALLET / "exodus.wallet").exists(): # if no wallet was restored
-                ctypes.windll.user32.MessageBoxW(0, "No current Exodus wallet found.", "MultiExodus", 0x10) # show error message
-                return # exit the function
-
-            shutil.copytree(EXODUS_WALLET / "exodus.wallet", target_folder) # copy the restored wallet to the new multi-wallet folder
-            asset_src = Path("./assets/title.png") # path to default wallet image 
-            if asset_src.exists(): # if the default image exists
-                shutil.copy(asset_src, target_folder / "title.png") # copy the default image to the new wallet folder
-
-            ctypes.windll.user32.MessageBoxW(0, f"Exodus wallet successfully imported as '{new_name}'", "MultiExodus", 0x40) # show success message
-
-            callback(root) # rebuild the UI with the new wallet
+        import_wallet(root, callback) # call the import wallet function
 
     else:
         return # user cancelled the operation
 
+
+def import_wallet(root, callback): # function to import an existing wallet folder
+    dialog = MyInputDialog(master=root, title="Edit Wallet Name", text="Enter new name:") # prompt for new wallet name
+
+    new_name = dialog.get_input() # get the inputted wallet name
+    if new_name and new_name.strip() != "": # if a valid name was provided
+        target_folder = MULTI_WALLET_DIR / new_name # path for the new wallet folder
+
+        if target_folder.exists(): # if a wallet with this name already exists
+            ctypes.windll.user32.MessageBoxW(0, "A wallet with this name already exists.", "MultiExodus", 0x10) # show error message
+            return # exit the function
+
+        if not (EXODUS_WALLET / "exodus.wallet").exists(): # if no wallet was restored
+            ctypes.windll.user32.MessageBoxW(0, "No current Exodus wallet found.", "MultiExodus", 0x10) # show error message
+            return # exit the function
+
+        shutil.copytree(EXODUS_WALLET / "exodus.wallet", target_folder) # copy the restored wallet to the new multi-wallet folder
+        asset_src = Path("./assets/title.png") # path to default wallet image 
+        if asset_src.exists(): # if the default image exists
+            shutil.copy(asset_src, target_folder / "title.png") # copy the default image to the new wallet folder
+
+        ctypes.windll.user32.MessageBoxW(0, f"Exodus wallet successfully imported as '{new_name}'", "MultiExodus", 0x40) # show success message
+
+        callback(root) # rebuild the UI with the new wallet
 
 def edit_wallet_name(label, folder): # function to edit wallet name
     old_name = label.current_name # get the current wallet name
