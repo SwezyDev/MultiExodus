@@ -5,6 +5,10 @@ import customtkinter
 
 scroll_frame = None # global variable to hold the scrollable frame
 
+def rebuild(root): # function to rebuild the ui
+    scroll_frame.destroy() # destroy current scroll frame
+    build_wallets_ui(root, *wallet_manager.detect_wallets()) # rebuild the ui with updated wallet list
+
 def build_wallets_ui(root, names, count): # function to build the wallets ui
     global scroll_frame # use the global scroll_frame variable
 
@@ -17,9 +21,6 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
     scroll_frame = customtkinter.CTkScrollableFrame(master=root, width=1355, height=680, fg_color="#202020") # create a new scrollable frame
     scroll_frame.place(x=10, y=10) # place the scrollable frame in the main window
 
-    def rebuild(): # function to rebuild the ui
-        scroll_frame.destroy() # destroy current scroll frame
-        build_wallets_ui(root, *wallet_manager.detect_wallets()) # rebuild the ui with updated wallet list
 
     for i in range(count): # create wallet frames for each detected wallet
         row = i // 5 # calculate the row position for the wallet frame
@@ -117,4 +118,4 @@ def edit_img_rebuild(path, rebuild, root): # helper function to edit wallet imag
     if file_path: # if a file was selected
         pil_image = Image.open(file_path).resize((200, 130)) # open and resize the selected image
         pil_image.save(path) # save the new image to the specified path
-        rebuild() # rebuild the UI to reflect the changes
+        rebuild(root) # rebuild the UI to reflect the changes

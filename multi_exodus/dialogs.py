@@ -12,6 +12,7 @@ class MyInputDialog(customtkinter.CTkToplevel):
         self.title(title)
         app.center_me(self, 300, 150)
         self.resizable(False, False)
+        
         self.grab_set()
         self.configure(fg_color=fg_color)
 
@@ -46,7 +47,12 @@ class MyInputDialog(customtkinter.CTkToplevel):
                                                 command=self.cancel, width=135)
         cancel_button.pack(side="left", padx=5)
 
+        self.after(200, lambda: self.iconbitmap(r"./assets/app.ico")) # Thank you https://github.com/aahan0511 ---> https://github.com/TomSchimansky/CustomTkinter/issues/1511#issuecomment-2586303815 
+
         self.protocol("WM_DELETE_WINDOW", self.cancel)
+
+        self.bind("<Enter>", lambda e: self.ok())
+        self.bind("<Escape>", lambda e: self.cancel())
 
         self.wait_window()
 
