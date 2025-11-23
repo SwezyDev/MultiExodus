@@ -30,6 +30,17 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 
 ---
 
+## 🎹 Keybinds
+* ❌ **ESC** — Close Windows
+* 🗑️ **DEL** — Delete all Wallets
+* ℹ️ **F1** — Show Information Box
+* 🔁 **F5** — Reload Wallets
+* ➕ **+** — Add a Wallet
+* ➖ **-** — Delete the oldest Wallet
+* 📥 ***** — Load oldest Wallet
+
+---
+
 ## 📥 Easy Installation
 1. Download the [Installer](https://github.com/SwezyDev/MultiExodus/releases/download/1.0.0/Multi.Exodus.Installer.exe)
 2. Follow the Installer Instructions
