@@ -57,6 +57,8 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 3. Choose an action:
    * ➕ **Add Wallet** — Triggers Exodus' built‑in recovery mode, lets you enter your seed phrase, and then saves the restored wallet under a custom name.
    * 📥 **Load Wallet** — Copies the selected wallet into the official Exodus directory and starts Exodus automatically.
+   * 📂 **Open Wallet Location** — Open the Location where your wallet is saved.
+4. Changes are applied instantly, and the UI rebuilds itself to reflect your updated wallet list.
    * ✏️ **Edit Wallet** — Click on the wallet name, note, or image to rename it, change its description, or assign a custom PNG preview.
    * 🗑️ **Delete Wallet** — Removes the wallet folder after confirmation.
 4. Changes are applied instantly, and the UI rebuilds itself to reflect your updated wallet list.
