@@ -87,7 +87,7 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
             master=standard_frame, text="🗑",
             fg_color="#202020", hover_color="#202020", text_color="#FF0000",
             font=("Segoe UI", 14), width=0, height=0,
-            command=lambda wn=wallet_name: wallet_manager.delete_wallet(wn, rebuild)
+            command=lambda wn=wallet_name: wallet_manager.delete_wallet(wn, lambda: rebuild(root))
         )
         delete_button.place(x=215, y=5) # place the delete button at top-right corner
 
