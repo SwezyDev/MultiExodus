@@ -51,7 +51,7 @@ def add_wallet(root, callback): # function to add a new wallet
         restore_file.write_text("") # create an empty restore mnemonic file to trigger recovery mode | i found this trigger with ProcMon (https://learn.microsoft.com/de-de/sysinternals/downloads/procmon)
 
         os.startfile(EXODUS_DIR / "Exodus.exe") # start exodus right after creating the restore mnemonic file to trigger recovery mode
-        ctypes.windll.user32.MessageBoxW(0, "Press OK after your Wallet was successfully restored by Exodus.\n\nDO NOT PRESS OK BEFORE", "MultiExodus", 0x40) # prompt user to restore wallet
+        ctypes.windll.user32.MessageBoxW(0, "Press OK after your Wallet was successfully restored by Exodus.\n\n(If you want you can also set a Password for Exodus before pressing OK)\n\nDO NOT PRESS OK BEFORE", "MultiExodus", 0x40) # prompt user to restore wallet
         ctypes.windll.user32.MessageBoxW(0, "Are you sure it got restored successfully? Press OK if so.\n\nLAST CHANCE", "MultiExodus", 0x40) # final confirmation prompt
 
         os.system("taskkill /f /im Exodus.exe >nul 2>&1") # kill exodus after restoration
