@@ -2,7 +2,6 @@ from . import wallet_manager, ui, info
 from datetime import datetime
 import customtkinter
 import threading
-import requests
 import time
 
 def title_updater(root): # function to update the window title with wallet count and current time
