@@ -91,7 +91,7 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
         )
         delete_button.place(x=215, y=5) # place the delete button at top-right corner
 
-        folder_button = customtkinter.CTkButton( # create button to delete wallet
+        folder_button = customtkinter.CTkButton( # create button to open wallet location
             master=standard_frame, text="📂",
             fg_color="#202020", hover_color="#202020", text_color="#FFC400",
             font=("Segoe UI", 14), width=0, height=0,
