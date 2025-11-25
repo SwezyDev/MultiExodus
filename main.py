@@ -15,7 +15,7 @@ if __name__ == '__main__':
         constants.MULTI_WALLET_DIR.mkdir(parents=True, exist_ok=True) # create the directory if it doesnt exist
 
     if not constants.EXODUS_DIR.exists(): # check if the Exodus directory exists
-        ctypes.windll.user32.MessageBoxW(0, f"Exodus directory not found! Please install Exodus wallet first.", "MultiExodus", 0x03 | 0x30) # show backup confirmation dialog
+        ctypes.windll.user32.MessageBoxW(0, f"Exodus directory not found! Please install Exodus wallet first.", "MultiExodus", 0x03 | 0x30) # show info message box
         os.system("start https://www.exodus.com/download/") # open Exodus download page
         os._exit(0) # exit the application if Exodus is not installed
 
