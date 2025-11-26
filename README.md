@@ -114,6 +114,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 │ ├─ update.py ➔ Auto-Update Helper Functions for MultiExodus
 │ └─ wallet_manager.py ➔ Manage, edit, and load Exodus wallets with backup support
 ├─ LICENSE ➔ License file
+├─ MultiExodus.sha256 ➔ SHA256 file for Auto-Updater
 ├─ README.md ➔ Read me file
 └─ main.py ➔ Start the Application
 ```
