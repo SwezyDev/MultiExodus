@@ -154,7 +154,7 @@ You can see that a file was created by Exodus called `restore-mnemonic` in the `
 * Performs file operations using `shutil` and `pathlib`.
 * Updates window title with wallet count and current time via a `background thread`.
 * Validates the running executable with `SHA-256`, checks GitHub for newer releases, downloads the latest installer, and launches it using `os.startfile`.
-* 
+ 
 ---
 
 ## ⚖️ License
