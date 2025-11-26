@@ -1,6 +1,7 @@
 from multi_exodus import main, constants, update
 import hashlib
 import ctypes
+import sys
 import os
 
 def sha256_get(path): # function to get the sha256 hash of a file
@@ -24,7 +25,7 @@ if __name__ == '__main__':
     print("Contact: https://t.me/Swezy")
     # print some info to the console about the project :)
 
-    current_hash = sha256_get(__file__) # get the sha256 hash of the current executable
+    current_hash = sha256_get(sys.executable) # get the sha256 hash of the current executable
     latest_hash = update.get_latest_hash() # get the latest sha256 hash from github
 
     if current_hash is None or latest_hash is None:
