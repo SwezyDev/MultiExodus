@@ -109,8 +109,9 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 │ ├─ app.py ➔ Main app window and event loop
 │ ├─ constants.py ➔ Defines wallet and Exodus directory paths
 │ ├─ dialogs.py ➔ Custom input dialog for user prompts
-│ ├─ info.py ➔ Custom Information box 
+│ ├─ info.py ➔ Custom Information box
 │ ├─ ui.py ➔ Builds the scrollable wallet interface and handles UI interactions
+│ ├─ update.py ➔ Auto-Update Helper Functions for MultiExodus
 │ └─ wallet_manager.py ➔ Manage, edit, and load Exodus wallets with backup support
 ├─ LICENSE ➔ License file
 ├─ README.md ➔ Read me file
