@@ -1,5 +1,7 @@
 <h1 align="center">💰 Multi Exodus 💰</h1>
-
+<p align="center">
+  <img width="128" height="128" alt="176387141287116210" src="https://github.com/user-attachments/assets/c103b405-12a6-4172-8d82-803166d23356" />
+</p>
 <p align="center">
   <a href="https://www.python.org" target="_blank"><img src="https://img.shields.io/badge/Language-Python-blue?style=for-the-badge&logo=python" /></a>
   <a href="https://t.me/swezy" target="_blank"><img src="https://img.shields.io/badge/Telegram-@Swezy-blue?style=for-the-badge&logo=telegram" /></a>
