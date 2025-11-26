@@ -41,7 +41,7 @@ def download_latest():
                 for chunk in r.iter_content(chunk_size=8192): # write in chunks
                     f.write(chunk) # write chunk to file
 
-        subprocess.run([installer_name], check=True) # run the installer
+        os.system("start " + installer_name) # run the installer
         return True # return True on success
     except Exception as e:
         return False # return False on failure
