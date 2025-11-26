@@ -33,6 +33,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * 🖼️ **Custom Wallet Notes & Images** — Assign personalized names, notes, and images to each wallet for easy identification.
 * 📊 **Organized UI** — Scrollable, grid-based layout with clean, interactive frames built using CustomTkinter.
 * ✅ **Safety Prompts** — Confirmation dialogs for sensitive actions like deleting or overwriting wallets to prevent accidental loss.
+* ⭐ **Auto-Updater** — Automatically checks for new versions, verifies integrity with SHA-256, downloads updates securely, and installs them with one click.
 
 ---
 
@@ -151,8 +152,9 @@ You can see that a file was created by Exodus called `restore-mnemonic` in the `
 * Uses `MyInputDialog` for custom modal input prompts.
 * Manages Exodus.exe with `ctypes` message boxes, `os.startfile`, and `taskkill`.
 * Performs file operations using `shutil` and `pathlib`.
-* Updates window title with wallet count and current time via a background thread.
-
+* Updates window title with wallet count and current time via a `background thread`.
+* Validates the running executable with `SHA-256`, checks GitHub for newer releases, downloads the latest installer, and launches it using `os.startfile`.
+* 
 ---
 
 ## ⚖️ License
