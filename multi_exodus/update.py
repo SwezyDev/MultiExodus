@@ -3,22 +3,16 @@ import subprocess
 import requests
 import os
 
+sha256_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/main/MultiExodus.sha256" # url to the sha256 hash file
 api_url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest" # github api url for latest release
 installer_name = "Multi.Exodus.Installer.exe" # name of the installer file
 
 def get_latest_hash(): # function to get the sha256 hash of the latest release executable
     try:
-        response = requests.get(api_url) # make a get request to the api
+        response = requests.get(sha256_url) # make a get request to the sha256 url
         response.raise_for_status() # raise an error for bad responses
-        release_data = response.json() # parse the json response
-
-        assets = release_data.get("assets", []) # get the assets from the release data
-        for a in assets: # iterate through the assets
-            if a["name"].lower().endswith(".exe"): # look for the executable asset
-                digest = a.get("digest", "") # get the digest field
-                if digest.startswith("sha256:"): # check if the digest is a sha256 hash
-                    return digest.split("sha256:")[1].strip() # return the sha256 hash
-        return None # return None if no executable asset found
+        hash_text = response.text.strip() # get the hash text from the response
+        return hash_text # return the hash text
     except Exception:
         return None # return None if there was an error
 
