@@ -24,12 +24,12 @@ if __name__ == '__main__':
     print("Contact: https://t.me/Swezy")
     # print some info to the console about the project :)
 
-    current_hash = sha256_get(__file__).lower() # get the sha256 hash of the current executable
-    latest_hash = update.get_latest_hash().lower() # get the latest sha256 hash from github
+    current_hash = sha256_get(__file__) # get the sha256 hash of the current executable
+    latest_hash = update.get_latest_hash() # get the latest sha256 hash from github
 
     if current_hash is None or latest_hash is None:
         ctypes.windll.user32.MessageBoxW(0, f"SHA256 calculation failed for MultiExodus. Auto-Update wont work.\n\nCheck if you're on the latest version.\nhttps://github.com/SwezyDev/MultiExodus", "MultiExodus", 0x10) # show error message box
-    elif current_hash != latest_hash:
+    elif current_hash.lower() != latest_hash.lower():
         user_response = ctypes.windll.user32.MessageBoxW(0, f"A new version of MultiExodus is available!\n\nDo you want to download it now?", "MultiExodus", 0x04 | 0x40) # show info message box with Yes/No options
         if user_response == 6: # if user clicked "Yes"
             r = update.download_latest() # download the latest version
