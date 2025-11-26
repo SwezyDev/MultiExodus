@@ -95,7 +95,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ## 📝 Repository structure 
 
 ```/
-├─ assets/ ➔ Screenshots of the Program in action
+├─ assets/ ➔ Files that are required to run the Application
 │ ├─ app.ico ➔ MultiExodus Icon
 │ ├─ info.txt ➔ Information about MultiExodus 
 │ ├─ preview.png ➔ A screenshot of the Program running
