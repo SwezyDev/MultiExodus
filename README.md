@@ -1,4 +1,8 @@
-<h1 align="center">💰 Multi Exodus 💰</h1>
+<h1 align="center">
+  <a href="https://multiexodus.vercel.app" target="_blank" style="text-decoration: none; color: inherit;">
+    💰 Multi Exodus 💰
+  </a>
+</h1>
 <p align="center">
   <img width="128" height="128" alt="176387141287116210" src="https://github.com/user-attachments/assets/c103b405-12a6-4172-8d82-803166d23356" />
 </p>
