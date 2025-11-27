@@ -73,7 +73,7 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
             master=standard_frame, text="Load Wallet",
             fg_color="#414141", hover_color="#2C2C2C",
             font=("Segoe UI", 14), width=200, height=30,
-            command=lambda wn=wallet_name: wallet_manager.load_wallet(wn)
+            command=lambda lbl=label: wallet_manager.load_wallet(lbl.current_name)
         )
         load_button.place(relx=0.5, y=210, anchor="n") # place the load button under note label
 
