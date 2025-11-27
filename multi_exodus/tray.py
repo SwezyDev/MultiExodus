@@ -1,11 +1,11 @@
 
-from . import settings, update, info, wallet_manager, motd, ui
+from . import settings, update, info, wallet_manager, motd, ui, constants
 from PIL import Image
 import threading
 import pystray
 
 def read_info(): # function to read info text from info.txt
-    with open("./assets/info.txt", "r", encoding="utf-8") as f: # load info text from file
+    with open(constants.INFO_PATH, "r", encoding="utf-8") as f: # load info text from file
         info_text = f.read() # read the entire content of the file
 
     return info_text # return the info text
@@ -35,7 +35,7 @@ def create(root, first_wallet): # function to create the system tray icon and me
         pystray.MenuItem("Quit", lambda: on_quit()),
     )
 
-    image = Image.open("./assets/app.ico") # load tray icon image
+    image = Image.open(constants.APP_ICON) # load tray icon image
 
     icon = pystray.Icon( # create tray icon
         "MultiExodus",

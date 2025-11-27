@@ -1,5 +1,5 @@
+from . import app, constants
 import customtkinter
-from . import app
 import requests
 
 def get_motd(): # function to get the message of the day from a remote source
@@ -30,7 +30,7 @@ class MotdPopup(customtkinter.CTkToplevel):
         info_label = customtkinter.CTkLabel(master=scroll_frame, text=text, fg_color=fg_color, text_color=text_color, font=("Segoe UI", 14), wraplength=325, justify="left")
         info_label.pack(padx=10, pady=10)
 
-        self.after(200, lambda: self.iconbitmap(r"./assets/app.ico")) # Thank you https://github.com/aahan0511 ---> https://github.com/TomSchimansky/CustomTkinter/issues/1511#issuecomment-2586303815 
+        self.after(200, lambda: self.iconbitmap(constants.APP_ICON)) # Thank you https://github.com/aahan0511 ---> https://github.com/TomSchimansky/CustomTkinter/issues/1511#issuecomment-2586303815 
 
         self.protocol("WM_DELETE_WINDOW", self.destroy)
 

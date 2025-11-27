@@ -1,4 +1,4 @@
-from . import app
+from . import app, constants
 import customtkinter
 
 # custom input dialog - credits https://github.com/TomSchimansky/CustomTkinter/issues/1826#issuecomment-1904712879 thank you (who ever you are, your account is deleted :( )
@@ -47,7 +47,7 @@ class MyInputDialog(customtkinter.CTkToplevel):
                                                 command=self.cancel, width=135)
         cancel_button.pack(side="left", padx=5)
 
-        self.after(200, lambda: self.iconbitmap(r"./assets/app.ico")) # Thank you https://github.com/aahan0511 ---> https://github.com/TomSchimansky/CustomTkinter/issues/1511#issuecomment-2586303815 
+        self.after(200, lambda: self.iconbitmap(constants.APP_ICON)) # Thank you https://github.com/aahan0511 ---> https://github.com/TomSchimansky/CustomTkinter/issues/1511#issuecomment-2586303815 
 
         self.protocol("WM_DELETE_WINDOW", self.cancel)
 

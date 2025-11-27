@@ -1,4 +1,4 @@
-from multi_exodus import main, constants, update, settings
+from multi_exodus import main, constants, update, settings, app
 import ctypes
 import os
     
@@ -10,6 +10,8 @@ if __name__ == '__main__':
     print("-------------------------------------")
     print("Contact: https://t.me/Swezy")
     # print some info to the console about the project :)
+
+    app.check_proc() # check if another instance is running
 
     config = settings.read_config() # read settings from settings.json
 
