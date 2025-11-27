@@ -8,6 +8,15 @@ import shutil
 import time
 import os
 
+def change_standard_picture(popup): # function to change the standard wallet picture
+    file_path = filedialog.askopenfilename(title="Select new standard wallet picture", filetypes=[("PNG Images", "*.png")]) # open file dialog to select new image
+    if file_path: # if a file was selected
+        asset_src = Path(file_path) # path to the selected image
+        asset_dst = Path("./assets/title.png") # path to the default wallet image
+        shutil.copy(asset_src, asset_dst) # copy the selected image to the assets folder
+        ctypes.windll.user32.MessageBoxW(0, f"Standard wallet picture changed successfully!\n\nNew wallets will use this picture by default.", "MultiExodus", 0x40) # show success message
+        popup.destroy() # close the settings popup
+
 def open_data_location(): # function to open the MultiExodus data location in file explorer
     if MULTI_WALLET_DIR.exists() and MULTI_WALLET_DIR.is_dir(): # if the multi-wallet directory exists
         os.startfile(MULTI_WALLET_DIR) # open the multi-wallet directory in file explorer
