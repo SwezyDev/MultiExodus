@@ -43,7 +43,9 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * ℹ️ **F1** — Show Information Box
 * ⚙️ **F2** — Show Settings Menu
 * 📂 **F3** — Show Data Folder
+* 🛜 **F4** — Check for Updates
 * 🔁 **F5** — Reload Wallets
+* 👋 **M** — Show Message of Today
 * ➕ **+** — Add a Wallet
 * ➖ **-** — Delete the oldest Wallet
 * 📥 * — Load oldest Wallet
