@@ -27,6 +27,7 @@ def focus_window(hwnd): # function to focus an existing window
     user32 = ctypes.windll.user32 # get user32 dll
     user32.ShowWindow(hwnd, 9)  # SW_RESTORE
     user32.SetForegroundWindow(hwnd) # bring window to foreground
+    ctypes.windll.user32.SwitchToThisWindow(hwnd, True) # switch to the window
 
 def search_win(): # function to search for existing window by title
     user32 = ctypes.windll.user32 # get user32 dll
@@ -44,7 +45,7 @@ def search_win(): # function to search for existing window by title
         return True # continue enumeration
 
     user32.EnumWindows(enum_proc, 0) # enumerate all windows
-    return handles[0] if handles else None # return the first matching handle or None
+    return handles if handles else None # return the first matching handle or None
 
 
 def check_proc(): # function to check if another instance of the app is running
@@ -67,8 +68,8 @@ def check_proc(): # function to check if another instance of the app is running
         for pid in matching: # iterate through matching processes
             if pid != curr_pid: # if the pid is not the current process
                 hwnd = search_win() # search for existing window
-                if hwnd: # if an existing window is found
-                    focus_window(hwnd) # focus the existing window
+                for h in hwnd: # focus all found windows
+                    focus_window(h) # focus the existing window
                 os._exit(0) # exit the current instance
 
     return # no other instance found
