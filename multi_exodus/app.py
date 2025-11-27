@@ -41,7 +41,8 @@ def main(): # main function to start the application
     root.bind("<F1>", lambda e: info.InfoPopup(root, 
                                             title="Multi Exodus Information", text=info_text, text_color="#FFFFFF",
                                             fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind F1 key to show info popup
-    
+    #root.bind("<F2>", lambda e: settings.SettingsPopup(root)) # bind F2 key to open settings popup (not implemented yet)
+    root.bind("<F3>", lambda e: wallet_manager.open_data_location()) # bind F3 key to open data location in file explorer
     root.bind("+", lambda e: wallet_manager.add_wallet(root, lambda r=root: ui.build_wallets_ui(root, *wallet_manager.detect_wallets()))) # bind + key to add a new wallet
     root.bind("-", lambda e: wallet_manager.delete_wallet(first_wallet, ui.rebuild(root))) # bind - key to delete a wallet
     root.bind("*", lambda e: wallet_manager.load_wallet(first_wallet)) # bind * key to load a wallet
