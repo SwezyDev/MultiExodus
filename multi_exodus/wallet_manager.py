@@ -8,6 +8,12 @@ import shutil
 import time
 import os
 
+def open_data_location(): # function to open the MultiExodus data location in file explorer
+    if MULTI_WALLET_DIR.exists() and MULTI_WALLET_DIR.is_dir(): # if the multi-wallet directory exists
+        os.startfile(MULTI_WALLET_DIR) # open the multi-wallet directory in file explorer
+    else:
+        ctypes.windll.user32.MessageBoxW(0, f"MultiExodus data directory does not exist.", "MultiExodus", 0x10) # show error message
+
 def detect_wallets(): # function to detect existing wallets
     if not MULTI_WALLET_DIR.exists(): # if the multi-wallet directory does not exist
         return [], 0 # return 0 and an empty list, because there are no wallets saved
