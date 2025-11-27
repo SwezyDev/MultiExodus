@@ -48,9 +48,8 @@ def search_win(): # function to find a window by its title prefix
 
 def check_proc(): # function to check if another instance is running
     pid = os.getpid() # get current process id
-    name = os.path.basename(sys.argv[0]) # get current executable name
-    
-    running = any(proc.info['pid'] != pid and proc.info['name'] == name.startswith(constants.WINDOW_TITLE) for proc in psutil.process_iter(['pid', 'name']))  # check for other processes with same name
+
+    running = any(proc.info['pid'] != pid and proc.info['name'] in constants.WINDOW_TITLE for proc in psutil.process_iter(['pid', 'name']))  # check for other processes with same name
 
     if running: # if another instance is running
         hwnd = search_win(constants.WINDOW_TITLE) # find the window handle
