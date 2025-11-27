@@ -4,15 +4,23 @@ from PIL import Image
 import threading
 import pystray
 
-def create(root, first_wallet):
-    def on_quit():
-        icon.stop()
-        root.after(0, root.quit)
+def read_info(): # function to read info text from info.txt
+    with open("./assets/info.txt", "r", encoding="utf-8") as f: # load info text from file
+        info_text = f.read() # read the entire content of the file
 
-    menu = pystray.Menu(
+    return info_text # return the info text
+
+def create(root, first_wallet): # function to create the system tray icon and menu
+    def on_quit(): # function to quit the application
+        icon.stop() # stop the tray icon
+        root.after(0, root.quit) # quit the main application
+
+    info_text = read_info() # read info text for tray menu
+
+    menu = pystray.Menu( # create the tray menu
         pystray.MenuItem("Show MultiExodus", lambda: root.after(0, root.deiconify)),
         pystray.MenuItem("────────────────", lambda: None, enabled=False),
-        pystray.MenuItem("Show Information", lambda: info.InfoPopup(root, title="Multi Exodus Information", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")),
+        pystray.MenuItem("Show Information", lambda: info.InfoPopup(root, title="Multi Exodus Information", text=info_text, text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")),
         pystray.MenuItem("Check for Updates", lambda: update.check_updates()),
         pystray.MenuItem("Refresh Wallets UI", lambda: ui.rebuild(root)),
         pystray.MenuItem("────────────────", lambda: None, enabled=False),
@@ -27,14 +35,13 @@ def create(root, first_wallet):
         pystray.MenuItem("Quit", lambda: on_quit()),
     )
 
-    image = Image.open("./assets/app.ico")
+    image = Image.open("./assets/app.ico") # load tray icon image
 
-    icon = pystray.Icon(
+    icon = pystray.Icon( # create tray icon
         "MultiExodus",
         image,
         "MultiExodus",
         menu
     )
 
-    # run tray icon in its own thread
-    threading.Thread(target=icon.run, daemon=True).start()
+    threading.Thread(target=icon.run, daemon=True).start() # run the tray icon in a separate thread
