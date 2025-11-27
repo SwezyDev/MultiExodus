@@ -73,6 +73,41 @@ def check_proc(): # function to check if another instance of the app is running
 
     return # no other instance found
 
+def pre_check(): # function to perform pre-checks before starting the app
+    check_proc() # check if another instance is running
+
+    config = settings.read_config() # read settings from settings.json
+
+    if not config.get("bypass_updates", False): # check if bypass updates is not enabled in settings
+        update.check_updates(msg_box=False) # check for updates unless bypassed in settings
+    
+    if not constants.MULTI_WALLET_DIR.exists(): # check if the MultiExodus directory exists
+        constants.MULTI_WALLET_DIR.mkdir(parents=True, exist_ok=True) # create the directory if it doesnt exist
+
+    if not constants.EXODUS_DIR.exists(): # check if the Exodus directory exists
+        ctypes.windll.user32.MessageBoxW(0, f"Exodus directory not found! Please install Exodus wallet first.", "MultiExodus", 0x30) # show info message box
+        os.system("start https://www.exodus.com/download/") # open Exodus download page
+        os._exit(0) # exit the application if Exodus is not installed
+
+def interpolate_color(start_color, end_color, factor): # function to interpolate between two hex colors
+    start_rgb = [int(start_color[i:i+2], 16) for i in (1, 3, 5)] # convert start color to rgb
+    end_rgb = [int(end_color[i:i+2], 16) for i in (1, 3, 5)] # convert end color to rgb
+    result_rgb = [ # interpolate each color channel
+        int(start_rgb[j] + (end_rgb[j] - start_rgb[j]) * factor) 
+        for j in range(3) # for each color channel (r, g, b)
+    ]
+    return f"#{result_rgb[0]:02x}{result_rgb[1]:02x}{result_rgb[2]:02x}" # convert back to hex color
+
+def animation(label, root, step=0, max_steps=100): # function for smooth color transition animation
+    factor = abs((step % (2 * max_steps)) - max_steps) / max_steps # calculate interpolation factor
+    smooth_color = interpolate_color("#1F1F1F", "#FFFFFF", factor) # interpolate between two colors
+    label.configure(text_color=smooth_color) # update label color
+    root.after(10, animation, label, root, step + 1, max_steps) # schedule next animation step
+
+def load_app(root, pre_frame): # function to load the main application
+    pre_check() # heavy work
+    time.sleep(2) # simulate loading time
+    root.after(0, create_app, root, pre_frame)  # switch back to UI thread
 
 def bind_keybinds(root, first_wallet, info_text): # function to bind keybinds to the root window
     root.bind("<Escape>", lambda e: root.quit()) # bind escape key to quit the app
@@ -92,13 +127,30 @@ def main(): # main function to start the application
     center_me(root, 1375, 700) # center the window
     root.resizable(False, False) # disable resizing
     root.iconbitmap(constants.APP_ICON) # set window icon
+    root.title("MultiExodus Loading...") # set pre window title
+
+    pre_frame = customtkinter.CTkFrame(root, width=1375, height=700, fg_color="#202020", corner_radius=0) # create pre frame
+    pre_frame.pack(fill="both", expand=True) # pack pre frame
+
+    loading = customtkinter.CTkLabel(pre_frame, text="Loading MultiExodus...", fg_color="#1F1F1F", text_color="#FFFFFF", font=("Segoe UI", 32)) # create loading label
+    loading.place(relx=0.5, rely=0.5, anchor="center") # place loading label in center
+
+    animation(loading, root) # start loading animation
+
+    threading.Thread(target=lambda: load_app(root, pre_frame), daemon=True).start() # start loading the app in a separate thread
+
+    root.protocol("WM_DELETE_WINDOW", lambda: root.withdraw()) # minimize to tray on close
+
+    root.mainloop() # start the main event loop
 
 
+def create_app(root, pre_frame): # function to create and run the MultiExodus application
+    pre_frame.destroy() # destroy pre frame
     names, count = wallet_manager.detect_wallets() # detect existing wallets
 
     first_wallet = names[0] if names else "" # get the first wallet name for delete binding
 
-    tray.create(root, first_wallet)
+    tray.create(root, first_wallet) # create the system tray icon and menu
 
     threading.Thread(target=title_updater, args=(root,), daemon=True).start() # start title updater thread
 
@@ -108,8 +160,3 @@ def main(): # main function to start the application
         info_text = f.read()
 
     bind_keybinds(root, first_wallet, info_text) # bind keybinds
-
-    root.protocol("WM_DELETE_WINDOW", lambda: root.withdraw()) # minimize to tray on close
-
-    root.mainloop() # start the main event loop
-
