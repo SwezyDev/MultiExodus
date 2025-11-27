@@ -22,7 +22,7 @@ def create(root, first_wallet):
         pystray.MenuItem("Delete All Wallets", lambda: wallet_manager.delete_all_wallets(lambda: ui.rebuild(root))),
         pystray.MenuItem("────────────────", lambda: None, enabled=False),
         pystray.MenuItem("Open Data Location", lambda: wallet_manager.open_data_location()),
-        pystray.MenuItem("Show Message of the Day", lambda: motd.MotdPopup(root)),
+        pystray.MenuItem("Show Message of the Day", lambda: motd.MotdPopup(root, title="Message of the Day", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")),
         pystray.MenuItem("Settings", lambda: settings.SettingsPopup(root, title="Multi Exodus Settings", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")),
         pystray.MenuItem("Quit", lambda: on_quit()),
     )

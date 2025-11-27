@@ -26,7 +26,7 @@ def bind_keybinds(root, first_wallet, info_text): # function to bind keybinds to
     root.bind("<F3>", lambda e: wallet_manager.open_data_location()) # bind F3 key to open data location in file explorer
     root.bind("<F4>", lambda e: update.check_updates()) # bind F4 to check for updates
     root.bind("<F5>", lambda e: ui.rebuild(root)) # bind F5 key to refresh the wallets ui
-    root.bind("m", lambda e: motd.MotdPopup(root)) # bind m key to show message of the day popup
+    root.bind("m", lambda e: motd.MotdPopup(root, title="Message of the Day", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind m key to show message of the day popup
     root.bind("+", lambda e: wallet_manager.add_wallet(root, lambda r=root: ui.build_wallets_ui(root, *wallet_manager.detect_wallets()))) # bind + key to add a new wallet
     root.bind("-", lambda e: wallet_manager.delete_wallet(first_wallet, ui.rebuild(root))) # bind - key to delete a wallet
     root.bind("*", lambda e: wallet_manager.load_wallet(first_wallet)) # bind * key to load a wallet
