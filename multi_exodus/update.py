@@ -1,6 +1,6 @@
 from .constants import GITHUB_REPO
-import subprocess
 import requests
+import hashlib
 import os
 
 sha256_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/main/MultiExodus.sha256" # url to the sha256 hash file
@@ -14,6 +14,18 @@ def get_latest_hash(): # function to get the sha256 hash of the latest release e
         hash_text = response.text.strip() # get the hash text from the response
         return hash_text # return the hash text
     except Exception:
+        return None # return None if there was an error
+
+def sha256_get(path): # function to get the sha256 hash of a file
+    if not os.path.isfile(path): # check if the file exists
+        return None # return None if the file does not exist
+    sha256_hash = hashlib.sha256() # create a sha256 hash object
+    try: # read the file in chunks to avoid memory issues
+        with open(path, "rb") as f: # open the file in binary mode
+            for byte_block in iter(lambda: f.read(4096), b""): # read the file in 4096 byte chunks
+                sha256_hash.update(byte_block) # update the hash object with the chunk
+        return sha256_hash.hexdigest() # return the hex digest of the hash
+    except Exception as e: # catch any exceptions
         return None # return None if there was an error
 
 def download_latest():

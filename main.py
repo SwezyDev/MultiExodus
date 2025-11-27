@@ -1,20 +1,7 @@
 from multi_exodus import main, constants, update
-import hashlib
 import ctypes
 import sys
 import os
-
-def sha256_get(path): # function to get the sha256 hash of a file
-    if not os.path.isfile(path): # check if the file exists
-        return None # return None if the file does not exist
-    sha256_hash = hashlib.sha256() # create a sha256 hash object
-    try: # read the file in chunks to avoid memory issues
-        with open(path, "rb") as f: # open the file in binary mode
-            for byte_block in iter(lambda: f.read(4096), b""): # read the file in 4096 byte chunks
-                sha256_hash.update(byte_block) # update the hash object with the chunk
-        return sha256_hash.hexdigest() # return the hex digest of the hash
-    except Exception as e: # catch any exceptions
-        return None # return None if there was an error
     
 if __name__ == '__main__': 
     print("Welcome to MultiExodus Wallet Manager!")
@@ -25,7 +12,7 @@ if __name__ == '__main__':
     print("Contact: https://t.me/Swezy")
     # print some info to the console about the project :)
 
-    current_hash = sha256_get(sys.executable) # get the sha256 hash of the current executable
+    current_hash = update.sha256_get(sys.executable) # get the sha256 hash of the current executable
     latest_hash = update.get_latest_hash() # get the latest sha256 hash from github
 
     if current_hash is None or latest_hash is None:
