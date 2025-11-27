@@ -14,7 +14,7 @@ if __name__ == '__main__':
     config = settings.read_config() # read settings from settings.json
 
     if not config.get("bypass_updates", False): # check if bypass updates is not enabled in settings
-        update.check_updates() # check for updates unless bypassed in settings
+        update.check_updates(msg_box=False) # check for updates unless bypassed in settings
     
     if not constants.MULTI_WALLET_DIR.exists(): # check if the MultiExodus directory exists
         constants.MULTI_WALLET_DIR.mkdir(parents=True, exist_ok=True) # create the directory if it doesnt exist
