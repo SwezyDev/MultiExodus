@@ -51,20 +51,26 @@ def check_proc(): # function to check if another instance of the app is running
     curr_pid = os.getpid() # get current process id
     exe_name = os.path.basename(sys.argv[0]).lower() # get current executable name
 
+    matching = [] # list to hold matching processes
     for proc in psutil.process_iter(['pid', 'name']): # iterate through all running processes
-        try:
+        try: # iterate through all running processes
             name = proc.info['name'] # get process name
             pid = proc.info['pid'] # get process id
-            if not name: # skip processes without a name
-                continue # continue to next process
-            name = name.lower() # convert name to lowercase for comparison
-            if name == exe_name and pid != curr_pid: # check if process matches current executable and is not the current process 
+            if not name: # skip processes with no name
+                continue # skip processes with no name
+            if name.lower() == exe_name: # check if process name matches the current executable name
+                matching.append(pid) # add matching process id to list
+        except (psutil.NoSuchProcess, psutil.AccessDenied): # ignore processes that no longer exist or are inaccessible
+            pass # ignore processes that no longer exist or are inaccessible
+
+    if len(matching) > 2: # if more than one instance is found
+        for pid in matching: # iterate through matching processes
+            if pid != curr_pid: # if the pid is not the current process
                 hwnd = search_win() # search for existing window
                 if hwnd: # if an existing window is found
                     focus_window(hwnd) # focus the existing window
                 os._exit(0) # exit the current instance
-        except (psutil.NoSuchProcess, psutil.AccessDenied): # handle exceptions for processes that no longer exist or are inaccessible
-            pass # ignore these exceptions
+
     return # no other instance found
 
 
