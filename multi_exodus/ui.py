@@ -6,8 +6,11 @@ import customtkinter
 scroll_frame = None # global variable to hold the scrollable frame
 
 def rebuild(root): # function to rebuild the ui
+    from .app import bind_keybinds # import bind_keybinds function to rebind keys
     scroll_frame.destroy() # destroy current scroll frame
-    build_wallets_ui(root, *wallet_manager.detect_wallets()) # rebuild the ui with updated wallet list
+    names, count = wallet_manager.detect_wallets() # detect wallets again
+    bind_keybinds(root, names[0] if names else None) # rebind keybinds
+    build_wallets_ui(root, names, count) # rebuild the ui with updated wallet list
 
 def build_wallets_ui(root, names, count): # function to build the wallets ui
     global scroll_frame # use the global scroll_frame variable
@@ -87,7 +90,7 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
             master=standard_frame, text="🗑",
             fg_color="#202020", hover_color="#202020", text_color="#FF0000",
             font=("Segoe UI", 14), width=0, height=0,
-            command=lambda wn=wallet_name: wallet_manager.delete_wallet(wn, lambda: rebuild(root))
+            command=lambda lbl=label: wallet_manager.delete_wallet(lbl.current_name, lambda: rebuild(root))
         )
         delete_button.place(x=215, y=5) # place the delete button at top-right corner
 
@@ -95,7 +98,7 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
             master=standard_frame, text="📂",
             fg_color="#202020", hover_color="#202020", text_color="#FFC400",
             font=("Segoe UI", 14), width=0, height=0,
-            command=lambda wn=wallet_name: wallet_manager.open_wallet(wn)
+            command=lambda lbl=label: wallet_manager.open_wallet(lbl.current_name)
         )
         folder_button.place(x=215, y=30) # place the folder button at top-right corner
 

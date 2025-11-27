@@ -109,7 +109,10 @@ def load_app(root, pre_frame): # function to load the main application
     time.sleep(2) # simulate loading time
     root.after(0, create_app, root, pre_frame)  # switch back to UI thread
 
-def bind_keybinds(root, first_wallet, info_text): # function to bind keybinds to the root window
+def bind_keybinds(root, first_wallet): # function to bind keybinds to the root window
+    with open(constants.INFO_PATH, "r", encoding="utf-8") as f: # load info text from file
+        info_text = f.read()
+
     root.bind("<Escape>", lambda e: root.quit()) # bind escape key to quit the app
     root.bind("<F1>", lambda e: info.InfoPopup(root, title="Multi Exodus Information", text=info_text, text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind F1 key to show info popup
     root.bind("<F2>", lambda e: settings.SettingsPopup(root, title="Multi Exodus Settings", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind F2 key to open settings popup (not implemented yet)
@@ -156,7 +159,4 @@ def create_app(root, pre_frame): # function to create and run the MultiExodus ap
 
     ui.build_wallets_ui(root, names, count) # build the wallets ui
 
-    with open(constants.INFO_PATH, "r", encoding="utf-8") as f: # load info text from file
-        info_text = f.read()
-
-    bind_keybinds(root, first_wallet, info_text) # bind keybinds
+    bind_keybinds(root, first_wallet) # bind keybinds
