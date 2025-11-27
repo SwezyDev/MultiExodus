@@ -106,7 +106,8 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ```/
 ├─ assets/ ➔ Files that are required to run the Application
 │ ├─ app.ico ➔ MultiExodus Icon
-│ ├─ info.txt ➔ Information about MultiExodus 
+│ ├─ info.txt ➔ Information about MultiExodus
+│ ├─ motd.txt ➔ Message of today text
 │ ├─ preview.png ➔ A screenshot of the Program running
 │ └─ title.png ➔ Standard wallet preview picture
 ├─ multi_exodus/ ➔ Scripts that are required to run the Application
