@@ -9,7 +9,7 @@ sha256_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/main/M
 api_url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest" # github api url for latest release
 installer_name = "Multi.Exodus.Installer.exe" # name of the installer file
 
-def check_updates(): # function to check for updates
+def check_updates(msg_box): # function to check for updates
     current_hash = sha256_get(sys.executable) # get the sha256 hash of the current executable
     latest_hash = get_latest_hash() # get the latest sha256 hash from github
 
@@ -28,6 +28,9 @@ def check_updates(): # function to check for updates
                 ctypes.windll.user32.MessageBoxW(0, f"Failed to download the latest version of MultiExodus.\n\nPlease visit the GitHub page to download it manually.\nhttps://github.com/SwezyDev/MultiExodus", "MultiExodus", 0x10) # show error message box
                 os.system("start https://github.com/SwezyDev/MultiExodus") # open GitHub page
             os._exit(0) # exit the application to allow user to run the new version
+    
+    if msg_box:
+        ctypes.windll.user32.MessageBoxW(0, f"You are running the latest version of MultiExodus.", "MultiExodus", 0x40) # show info message box
 
 def get_latest_hash(): # function to get the sha256 hash of the latest release executable
     try:
