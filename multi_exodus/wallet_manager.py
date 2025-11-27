@@ -1,4 +1,4 @@
-from .constants import MULTI_WALLET_DIR, EXODUS_WALLET, EXODUS_DIR
+from .constants import MULTI_WALLET_DIR, EXODUS_WALLET, EXODUS_DIR, DEFAULT_PNG
 from customtkinter import filedialog
 from .dialogs import MyInputDialog
 from PIL import Image, ImageDraw
@@ -12,7 +12,7 @@ def change_standard_picture(popup): # function to change the standard wallet pic
     file_path = filedialog.askopenfilename(title="Select new standard wallet picture", filetypes=[("PNG Images", "*.png")]) # open file dialog to select new image
     if file_path: # if a file was selected
         asset_src = Path(file_path) # path to the selected image
-        asset_dst = Path("./assets/title.png") # path to the default wallet image
+        asset_dst = Path(DEFAULT_PNG) # path to the default wallet image
         shutil.copy(asset_src, asset_dst) # copy the selected image to the assets folder
         ctypes.windll.user32.MessageBoxW(0, f"Standard wallet picture changed successfully!\n\nNew wallets will use this picture by default.", "MultiExodus", 0x40) # show success message
         popup.destroy() # close the settings popup
@@ -93,7 +93,7 @@ def import_wallet(root, callback): # function to import an existing wallet folde
             return # exit the function
 
         shutil.copytree(EXODUS_WALLET / "exodus.wallet", target_folder) # copy the restored wallet to the new multi-wallet folder
-        asset_src = Path("./assets/title.png") # path to default wallet image 
+        asset_src = Path(DEFAULT_PNG) # path to default wallet image 
         if asset_src.exists(): # if the default image exists
             shutil.copy(asset_src, target_folder / "title.png") # copy the default image to the new wallet folder
 

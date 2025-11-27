@@ -53,7 +53,7 @@ class SettingsPopup(customtkinter.CTkToplevel):
         change_standard_picture_button = customtkinter.CTkButton(master=scroll_frame, text=" . . . ", fg_color=scroll_bc, hover_color="#292929", text_color="#FFFFFF", width=20, font=("Segoe UI", 14), command=lambda: wallet_manager.change_standard_picture(self))
         change_standard_picture_button.place(x=220, y=55)
 
-        self.after(200, lambda: self.iconbitmap(r"./assets/app.ico")) # Thank you https://github.com/aahan0511 ---> https://github.com/TomSchimansky/CustomTkinter/issues/1511#issuecomment-2586303815 
+        self.after(200, lambda: self.iconbitmap(constants.APP_ICON)) # Thank you https://github.com/aahan0511 ---> https://github.com/TomSchimansky/CustomTkinter/issues/1511#issuecomment-2586303815 
 
         self.protocol("WM_DELETE_WINDOW", self.destroy)
 
