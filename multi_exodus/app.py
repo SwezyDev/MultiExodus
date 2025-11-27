@@ -28,34 +28,45 @@ def focus_window(hwnd): # function to focus an existing window
     user32.ShowWindow(hwnd, 9)  # SW_RESTORE
     user32.SetForegroundWindow(hwnd) # bring window to foreground
 
-def search_win(): # function to find a window by its title prefix
+def search_win():
     user32 = ctypes.windll.user32 # get user32 dll
-    handles = [] # list to hold matching window handles
+    handles = [] # list to hold window handles
 
-    @ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_int, ctypes.c_int) # define callback function type
-    def enum_proc(hwnd, lParam): # callback function for EnumWindows
+    @ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_int, ctypes.c_int) # callback function for EnumWindows
+    def enum_proc(hwnd, lParam): # function to enumerate windows
         length = user32.GetWindowTextLengthW(hwnd) # get window title length
-        if length > 0: # if window has a title
+        if length > 0: # if window has a title 
             buf = ctypes.create_unicode_buffer(length + 1) # create buffer for title
             user32.GetWindowTextW(hwnd, buf, length + 1) # get window title
-            title = buf.value # convert buffer to string
-            if title.startswith(constants.WINDOW_TITLE): # check if title matches
+            title = buf.value # store title in variable
+            if title.startswith(constants.WINDOW_TITLE): # check if title matches our app
                 handles.append(hwnd) # add handle to list
         return True # continue enumeration
 
     user32.EnumWindows(enum_proc, 0) # enumerate all windows
-    return handles[0] if handles else None # return first matching handle or None
+    return handles[0] if handles else None # return the first matching handle or None
 
-def check_proc(): # function to check if another instance is running
-    pid = os.getpid() # get current process id
 
-    running = any(proc.info['pid'] != pid and proc.info['name'] in constants.WINDOW_TITLE for proc in psutil.process_iter(['pid', 'name']))  # check for other processes with same name
+def check_proc(): # function to check if another instance of the app is running
+    curr_pid = os.getpid() # get current process id
+    exe_name = os.path.basename(sys.argv[0]).lower() # get current executable name
 
-    if running: # if another instance is running
-        hwnd = search_win(constants.WINDOW_TITLE) # find the window handle
-        if hwnd: # if window handle found
-            focus_window(hwnd) # focus the existing window
-        sys.exit(0) # exit the current instance
+    for proc in psutil.process_iter(['pid', 'name']): # iterate through all running processes
+        try:
+            name = proc.info['name'] # get process name
+            pid = proc.info['pid'] # get process id
+            if not name: # skip processes without a name
+                continue # continue to next process
+            name = name.lower() # convert name to lowercase for comparison
+            if name == exe_name and pid != curr_pid: # check if process matches current executable and is not the current process 
+                hwnd = search_win() # search for existing window
+                if hwnd: # if an existing window is found
+                    focus_window(hwnd) # focus the existing window
+                os._exit(0) # exit the current instance
+        except (psutil.NoSuchProcess, psutil.AccessDenied): # handle exceptions for processes that no longer exist or are inaccessible
+            pass # ignore these exceptions
+    return # no other instance found
+
 
 def bind_keybinds(root, first_wallet, info_text): # function to bind keybinds to the root window
     root.bind("<Escape>", lambda e: root.quit()) # bind escape key to quit the app
