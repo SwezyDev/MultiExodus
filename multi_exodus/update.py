@@ -53,7 +53,7 @@ def sha256_get(path): # function to get the sha256 hash of a file
     except Exception as e: # catch any exceptions
         return None # return None if there was an error
 
-def download_latest():
+def download_latest(): # function to download the latest release executable
     try:
         response = requests.get(api_url) # make a get request to the api
         response.raise_for_status() # raise an error for bad responses

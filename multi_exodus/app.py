@@ -28,7 +28,7 @@ def focus_window(hwnd): # function to focus an existing window
     user32.ShowWindow(hwnd, 9)  # SW_RESTORE
     user32.SetForegroundWindow(hwnd) # bring window to foreground
 
-def search_win():
+def search_win(): # function to search for existing window by title
     user32 = ctypes.windll.user32 # get user32 dll
     handles = [] # list to hold window handles
 
