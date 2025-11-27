@@ -1,11 +1,33 @@
 from .constants import GITHUB_REPO
 import requests
 import hashlib
+import ctypes
+import sys
 import os
 
 sha256_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/main/MultiExodus.sha256" # url to the sha256 hash file
 api_url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest" # github api url for latest release
 installer_name = "Multi.Exodus.Installer.exe" # name of the installer file
+
+def check_updates(): # function to check for updates
+    current_hash = sha256_get(sys.executable) # get the sha256 hash of the current executable
+    latest_hash = get_latest_hash() # get the latest sha256 hash from github
+
+    if current_hash is None or latest_hash is None:
+        ctypes.windll.user32.MessageBoxW(0, f"SHA256 calculation failed for MultiExodus. Auto-Update wont work.\n\nCheck if you're on the latest version.\nhttps://github.com/SwezyDev/MultiExodus", "MultiExodus", 0x10) # show error message box
+    elif current_hash.lower() != latest_hash.lower():
+        user_response = ctypes.windll.user32.MessageBoxW(0, f"A new version of MultiExodus is available!\n\nDo you want to download it now?", "MultiExodus", 0x04 | 0x40) # show info message box
+        if user_response == 6: # if user clicked "Yes"
+            r = download_latest() # download the latest version
+            if not r: # if download failed
+                if not ctypes.windll.shell32.IsUserAnAdmin():
+                    user_response2 = ctypes.windll.user32.MessageBoxW(0, f"Failed to download the latest version of MultiExodus.\n\nWant to retry as administrator?", "MultiExodus", 0x04 | 0x10) # show error message box
+                    if user_response2 == 6: # if user clicked "Yes"
+                        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, None, None, 1) # restart the application as admin
+                        os._exit(0) # exit the current instance
+                ctypes.windll.user32.MessageBoxW(0, f"Failed to download the latest version of MultiExodus.\n\nPlease visit the GitHub page to download it manually.\nhttps://github.com/SwezyDev/MultiExodus", "MultiExodus", 0x10) # show error message box
+                os.system("start https://github.com/SwezyDev/MultiExodus") # open GitHub page
+            os._exit(0) # exit the application to allow user to run the new version
 
 def get_latest_hash(): # function to get the sha256 hash of the latest release executable
     try:
