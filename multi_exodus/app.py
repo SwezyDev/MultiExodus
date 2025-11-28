@@ -45,7 +45,7 @@ def search_win(): # function to search for existing window by title
         return True # continue enumeration
 
     user32.EnumWindows(enum_proc, 0) # enumerate all windows
-    return handles if handles else None # return the first matching handle or None
+    return handles if handles else None # return the matching handle or None
 
 
 def check_proc(): # function to check if another instance of the app is running
