@@ -15,6 +15,7 @@ def check_updates(msg_box): # function to check for updates
 
     if current_hash is None or latest_hash is None:
         ctypes.windll.user32.MessageBoxW(0, f"SHA256 calculation failed for MultiExodus. Auto-Update wont work.\n\nCheck if you're on the latest version.\nhttps://github.com/SwezyDev/MultiExodus", "MultiExodus", 0x10) # show error message box
+        return # exit the function
     elif current_hash.lower() != latest_hash.lower():
         user_response = ctypes.windll.user32.MessageBoxW(0, f"A new version of MultiExodus is available!\n\nDo you want to download it now?", "MultiExodus", 0x04 | 0x40) # show info message box
         if user_response == 6: # if user clicked "Yes"
