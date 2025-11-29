@@ -1,8 +1,9 @@
-
 from . import settings, update, info, wallet_manager, motd, ui, constants
 from PIL import Image
 import threading
 import pystray
+
+tray_icon = None # global variable to hold the tray icon
 
 def read_info(): # function to read info text from info.txt
     with open(constants.INFO_PATH, "r", encoding="utf-8") as f: # load info text from file
@@ -11,6 +12,7 @@ def read_info(): # function to read info text from info.txt
     return info_text # return the info text
 
 def create(root, first_wallet): # function to create the system tray icon and menu
+    global tray_icon # use the global tray_icon variable
     def on_quit(): # function to quit the application
         icon.stop() # stop the tray icon
         root.after(0, root.quit) # quit the main application
@@ -43,5 +45,13 @@ def create(root, first_wallet): # function to create the system tray icon and me
         "MultiExodus",
         menu
     )
+    tray_icon = icon # assign to global variable
 
     threading.Thread(target=icon.run, daemon=True).start() # run the tray icon in a separate thread
+
+def restart_tray(root, first_wallet):
+    global tray_icon
+    if tray_icon is not None:
+        tray_icon.stop()
+
+    create(root, first_wallet)
