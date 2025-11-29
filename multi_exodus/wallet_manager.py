@@ -3,6 +3,7 @@ from customtkinter import filedialog
 from .dialogs import MyInputDialog
 from PIL import Image, ImageDraw
 from pathlib import Path
+from . import settings
 import ctypes
 import shutil
 import time
@@ -27,12 +28,22 @@ def detect_wallets(): # function to detect existing wallets
     if not MULTI_WALLET_DIR.exists(): # if the multi-wallet directory does not exist
         return [], 0 # return 0 and an empty list, because there are no wallets saved
 
+    config = settings.read_config() # read settings to determine sorting method
+    sort_value = config.get("sort_wallets_by", "Oldest First") # default to "Oldest First" if not set
+
+    if sort_value in ("A-Z Alphabetical", "Z-A Alphabetical"): # if sorting alphabetically
+        names = sorted([d.name for d in MULTI_WALLET_DIR.iterdir() if d.is_dir()]) # get sorted list of wallet folder names
+        if sort_value == "Z-A Alphabetical": # if sorting Z-A
+            names.reverse() # reverse the list for Z-A order
+        return names, len(names) # return the list of names and the count of wallets
+
     folders = [] # list to hold wallet folder names and their creation times
     for d in MULTI_WALLET_DIR.iterdir(): # iterate through items in the multi-wallet directory
         if d.is_dir(): # if the item is a directory
             folders.append((d.name, d.stat().st_ctime)) # add the folder name and creation time to the list
 
-    folders.sort(key=lambda x: x[1]) # sort folders by creation time
+    reverse_maybe = True if sort_value == "Newest First" else False # determine if sorting should be reversed
+    folders.sort(key=lambda x: x[1], reverse=reverse_maybe) # sort folders by creation time
 
     names = [name for name, _ in folders] # extract just the folder names
     return names, len(names) # return the list of names and the count of wallets
