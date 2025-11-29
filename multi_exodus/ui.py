@@ -1,4 +1,5 @@
 from .constants import MULTI_WALLET_DIR
+from .tray import restart_tray
 from . import wallet_manager
 from PIL import Image
 import customtkinter
@@ -10,6 +11,7 @@ def rebuild(root): # function to rebuild the ui
     scroll_frame.destroy() # destroy current scroll frame
     names, count = wallet_manager.detect_wallets() # detect wallets again
     bind_keybinds(root, names[0] if names else None) # rebind keybinds
+    restart_tray(root, names[0] if names else None) # restart the tray icon to refresh menu
     build_wallets_ui(root, names, count) # rebuild the ui with updated wallet list
 
 def build_wallets_ui(root, names, count): # function to build the wallets ui
