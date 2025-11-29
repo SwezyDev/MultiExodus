@@ -18,8 +18,8 @@ F3: Show Data Folder
 F4: Check for Updates
 F5: Reload Wallets
 +: Add a Wallet
--: Delete the oldest Wallet
-*: Load oldest Wallet
+-: Delete the First Wallet
+*: Load First Wallet
 
 GitHub: https://github.com/SwezyDev/MultiExodus
 Contact: https://t.me/Swezy
