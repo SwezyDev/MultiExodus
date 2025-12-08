@@ -112,6 +112,23 @@ def import_wallet(root, callback): # function to import an existing wallet folde
 
         callback(root) # rebuild the UI with the new wallet
 
+def show_wallet_info(wallet_name): # function to show wallet information
+    target_folder = MULTI_WALLET_DIR / wallet_name # path to the wallet folder
+    if target_folder.exists() and target_folder.is_dir(): # if the wallet folder exists
+        creation_time = time.ctime(target_folder.stat().st_ctime) # get the creation time of the wallet folder
+        ago_time = settings.time_ago(target_folder.stat().st_ctime) # get how long ago the wallet was created
+        wallet_note_path = target_folder / "note.txt" # path to the wallet note file
+        wallet_pic_path = target_folder / "title.png" # path to the wallet picture file
+        wallet_note = "None" # default note text
+        if wallet_note_path.exists(): # if the wallet note file exists
+            with open(wallet_note_path, "r", encoding="utf-8") as f: # open the note file
+                wallet_note = f.read() # read the note text
+        info_text = f"Wallet Name: {wallet_name}\n\nWallet Note: {wallet_note}\n\nWallet Picture: {wallet_pic_path}\n\nCreation Time: {creation_time} ({ago_time})\n\nLocation: {target_folder}" # prepare the info text
+        ctypes.windll.user32.MessageBoxW(0, info_text, "Wallet Information", 0x40) # show the wallet information
+    else:
+        ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' does not exist.", "MultiExodus", 0x10) # show error message
+
+
 def edit_wallet_name(label, folder): # function to edit wallet name
     old_name = label.current_name # get the current wallet name
     dialog = MyInputDialog(title="Edit Wallet Name", text="Enter new name:") # prompt for new wallet name
@@ -197,5 +214,6 @@ def load_wallet(wallet_name): # function to load a wallet into Exodus
         return [f for f in files if f in ("note.txt", "title.png")] # ignore note and title image files when copying
 
     shutil.copytree(target_folder, EXODUS_WALLET / "exodus.wallet", ignore=ignore_files) # copy the selected wallet to the exodus wallet folder
-    ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' has been loaded into Exodus.\nYou can now launch Exodus to access it.", "MultiExodus", 0x40) # show success message
-    os.startfile(EXODUS_DIR / "Exodus.exe") # launch exodus
+    msg_b = ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' has been loaded into Exodus.\n\nDo you want to launch Exodus now?", "MultiExodus", 0x40) # show success message
+    if msg_b == 6: # if user clicked "Yes"
+        os.startfile(EXODUS_DIR / "Exodus.exe") # launch exodus
