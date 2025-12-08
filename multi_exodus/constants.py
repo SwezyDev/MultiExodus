@@ -15,3 +15,5 @@ INFO_PATH = "./assets/info.txt" # path to info image
 DEFAULT_PNG = "./assets/title.png" # default name for new wallets
 
 GITHUB_REPO = "SwezyDev/MultiExodus" # github repository for multi exodus
+
+CLIENT_ID = "1447723044717203496" # discord application client id

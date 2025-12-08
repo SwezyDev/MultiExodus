@@ -1,4 +1,4 @@
-from . import wallet_manager, ui, info, settings, update, motd, tray, constants
+from . import wallet_manager, ui, info, settings, update, motd, tray, constants, rpc
 from datetime import datetime
 import customtkinter
 import threading
@@ -102,7 +102,8 @@ def interpolate_color(start_color, end_color, factor): # function to interpolate
 def animation(label, root, step=0, max_steps=100): # function for smooth color transition animation
     factor = abs((step % (2 * max_steps)) - max_steps) / max_steps # calculate interpolation factor
     smooth_color = interpolate_color("#1F1F1F", "#FFFFFF", factor) # interpolate between two colors
-    label.configure(text_color=smooth_color) # update label color
+    if label.winfo_exists(): # check if label still exists
+        label.configure(text_color=smooth_color) # update label color
     root.after(10, animation, label, root, step + 1, max_steps) # schedule next animation step
 
 def load_app(root, pre_frame): # function to load the main application
@@ -136,7 +137,7 @@ def main(): # main function to start the application
     pre_frame = customtkinter.CTkFrame(root, width=1375, height=700, fg_color="#202020", corner_radius=0) # create pre frame
     pre_frame.pack(fill="both", expand=True) # pack pre frame
 
-    loading = customtkinter.CTkLabel(pre_frame, text="Loading MultiExodus...", fg_color="#1F1F1F", text_color="#FFFFFF", font=("Segoe UI", 32)) # create loading label
+    loading = customtkinter.CTkLabel(pre_frame, text="Loading MultiExodus...", fg_color="#202020", text_color="#FFFFFF", font=("Segoe UI", 32), bg_color="#202020") # create loading label
     loading.place(relx=0.5, rely=0.5, anchor="center") # place loading label in center
 
     animation(loading, root) # start loading animation
@@ -154,9 +155,14 @@ def create_app(root, pre_frame): # function to create and run the MultiExodus ap
 
     first_wallet = names[0] if names else "" # get the first wallet name for delete binding
 
+    config = settings.read_config() # read settings from settings.json
+
     tray.create(root, first_wallet) # create the system tray icon and menu
 
     threading.Thread(target=title_updater, args=(root,), daemon=True).start() # start title updater thread
+
+    if config.get("enable_rpc", False): # check if rpc is enabled in settings
+        threading.Thread(target=lambda: rpc.start_rpc(count), daemon=True).start() # start discord rich presence
 
     ui.build_wallets_ui(root, names, count) # build the wallets ui
 

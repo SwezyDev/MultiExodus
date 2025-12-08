@@ -1,5 +1,6 @@
 from .constants import MULTI_WALLET_DIR
 from .tray import restart_tray
+from .rpc import restart_rpc
 from . import wallet_manager
 from PIL import Image
 import customtkinter
@@ -13,6 +14,7 @@ def rebuild(root): # function to rebuild the ui
     bind_keybinds(root, names[0] if names else None) # rebind keybinds
     restart_tray(root, names[0] if names else None) # restart the tray icon to refresh menu
     build_wallets_ui(root, names, count) # rebuild the ui with updated wallet list
+    restart_rpc(count) # restart the rpc server with updated wallet count
 
 def build_wallets_ui(root, names, count): # function to build the wallets ui
     global scroll_frame # use the global scroll_frame variable
@@ -104,6 +106,13 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
         )
         folder_button.place(x=215, y=30) # place the folder button at top-right corner
 
+        info_button = customtkinter.CTkButton( # create button to show wallet info
+            master=standard_frame, text="ⓘ",
+            fg_color="#202020", hover_color="#202020", text_color="#6495ED",
+            font=("Segoe UI", 14), width=0, height=0,
+            command=lambda lbl=label: wallet_manager.show_wallet_info(lbl.current_name)
+        )
+        info_button.place(x=218, y=55) # place the info button at top-right corner
 
     add_frame_index = count # index for the "Add Wallet"
     add_frame_row = add_frame_index // 5 # row position
