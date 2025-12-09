@@ -31,9 +31,10 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * 🔄 **Seamless Wallet Switching** — Load any wallet into Exodus instantly with one click, without manual file handling.
 * 🗂️ **Backup & Recovery Automation** — Automatically trigger Exodus recovery mode, backup existing wallets, and restore seed phrases safely.
 * 🖼️ **Custom Wallet Notes & Images** — Assign personalized names, notes, and images to each wallet for easy identification.
-* 📊 **Organized UI** — Scrollable, grid-based layout with clean, interactive frames built using CustomTkinter.
+* 📊 **Organized UI** — Scrollable, grid-based layout with clean, sortable, interactive frames built using CustomTkinter.
 * ✅ **Safety Prompts** — Confirmation dialogs for sensitive actions like deleting or overwriting wallets to prevent accidental loss.
 * ⭐ **Auto-Updater** — Automatically checks for new versions, verifies integrity with SHA-256, downloads updates securely, and installs them with one click.
+* 🖥 **Discord RPC** — Show your friends that you're using MultiExodus
 
 ---
 
@@ -162,7 +163,8 @@ You can see that a file was created by Exodus called `restore-mnemonic` in the `
 * Performs file operations using `shutil` and `pathlib`.
 * Updates window title with wallet count and current time via a `background thread`.
 * Validates the running executable with `SHA-256`, checks GitHub for newer releases, downloads the latest installer, and launches it using `os.startfile`.
- 
+* Connects to Discord RPC via `pypresence` using the `Application ID` from the discord developer portal.
+
 ---
 
 ## ⚖️ License
