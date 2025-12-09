@@ -118,6 +118,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 │ ├─ dialogs.py ➔ Custom input dialog for user prompts
 │ ├─ info.py ➔ Custom Information box
 │ ├─ motd.py ➔ Custom Message of the Day box
+│ ├─ rpc.py ➔ Discord RPC handling
 │ ├─ settings.py ➔ Custom Settings box to configure MultiExodus
 │ ├─ tray.py ➔ Tray Icon on Taskbar to control MultiExodus
 │ ├─ ui.py ➔ Builds the scrollable wallet interface and handles UI interactions
