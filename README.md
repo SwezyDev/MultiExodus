@@ -19,9 +19,9 @@
 
 **MultiExodus** is a Python-based utility designed to **manage multiple Exodus wallets**. It allows users to import, backup, edit, and switch wallets through a clean and intuitive **graphical interface** built with CustomTkinter.
 
-The application provides features such as **wallet detection**, **seed phrase recovery automation**, **image and note customization**, and **one-click wallet loading into Exodus**. Each wallet is stored in a dedicated folder, enabling safe backups and easy organization. The program also implements **confirmation dialogs and automated restoration triggers** to ensure safe wallet operations.
+The application provides features such as **wallet detection**, **seed phrase recovery automation**, **image and note customization**, **Discord RPC**, **custom sorting** and **one-click wallet loading into Exodus**. Each wallet is stored in a dedicated folder, enabling safe backups and easy organization. The program also implements **confirmation dialogs and automated restoration triggers** to ensure safe wallet operations.
 
-MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet management**, and **scrollable, grid-based UI frames** for efficient display and interaction with multiple wallets.
+MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet management**, and **scrollable, sortable, grid-based UI frames** for efficient display and interaction with multiple wallets.
 
 ---
 
@@ -31,9 +31,10 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * 🔄 **Seamless Wallet Switching** — Load any wallet into Exodus instantly with one click, without manual file handling.
 * 🗂️ **Backup & Recovery Automation** — Automatically trigger Exodus recovery mode, backup existing wallets, and restore seed phrases safely.
 * 🖼️ **Custom Wallet Notes & Images** — Assign personalized names, notes, and images to each wallet for easy identification.
-* 📊 **Organized UI** — Scrollable, grid-based layout with clean, interactive frames built using CustomTkinter.
+* 📊 **Organized UI** — Scrollable, grid-based layout with clean, sortable, interactive frames built using CustomTkinter.
 * ✅ **Safety Prompts** — Confirmation dialogs for sensitive actions like deleting or overwriting wallets to prevent accidental loss.
 * ⭐ **Auto-Updater** — Automatically checks for new versions, verifies integrity with SHA-256, downloads updates securely, and installs them with one click.
+* 🖥 **Discord RPC** — Show your friends that you're using MultiExodus
 
 ---
 
@@ -117,6 +118,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 │ ├─ dialogs.py ➔ Custom input dialog for user prompts
 │ ├─ info.py ➔ Custom Information box
 │ ├─ motd.py ➔ Custom Message of the Day box
+│ ├─ rpc.py ➔ Discord RPC handling
 │ ├─ settings.py ➔ Custom Settings box to configure MultiExodus
 │ ├─ tray.py ➔ Tray Icon on Taskbar to control MultiExodus
 │ ├─ ui.py ➔ Builds the scrollable wallet interface and handles UI interactions
@@ -162,7 +164,8 @@ You can see that a file was created by Exodus called `restore-mnemonic` in the `
 * Performs file operations using `shutil` and `pathlib`.
 * Updates window title with wallet count and current time via a `background thread`.
 * Validates the running executable with `SHA-256`, checks GitHub for newer releases, downloads the latest installer, and launches it using `os.startfile`.
- 
+* Connects to Discord RPC via `pypresence` using the `Application ID` from the discord developer portal.
+
 ---
 
 ## ⚖️ License

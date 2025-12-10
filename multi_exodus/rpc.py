@@ -1,4 +1,4 @@
-from .constants import CLIENT_ID
+from .constants import CLIENT_ID, GITHUB_REPO
 import pypresence
 import asyncio
 import time
@@ -27,7 +27,7 @@ def start_rpc(intx): # function to start the rpc client
         large_image="multiexodus-logo",
         large_text="MultiExodus - Manage Multiple Exodus Wallets",
         start=start_time,
-        buttons=[{"label": "Download MultiExodus", "url": "https://github.com/SwezyDev/MultiExodus"}, {"label": "Download Exodus", "url": "https://www.exodus.com/download/"}]
+        buttons=[{"label": "Download MultiExodus", "url": f"https://github.com/{GITHUB_REPO}"}, {"label": "Download Exodus", "url": "https://www.exodus.com/download/"}]
     )
 
 def stop_rpc(): # function to stop the rpc client
