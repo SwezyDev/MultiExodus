@@ -3,6 +3,7 @@ import customtkinter
 import requests
 
 def get_motd(): # function to get the message of the day from a remote source
+    print("Test")
     try: # try to fetch the motd
         response = requests.get("https://raw.githubusercontent.com/SwezyDev/MultiExodus/main/assets/motd.txt", timeout=5) # fetch motd from github
         if response.status_code == 200: # check if the request was successful

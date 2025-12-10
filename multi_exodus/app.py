@@ -1,4 +1,5 @@
 from . import wallet_manager, ui, info, settings, update, motd, tray, constants, rpc
+from collections import defaultdict
 from datetime import datetime
 import customtkinter
 import threading
@@ -7,12 +8,48 @@ import psutil
 import time
 import sys
 import os
+import re
+
+def restart_title(): # function to restart the title updater thread
+    threading.Thread(target=title_updater, args=(root,), daemon=True).start() # start title updater thread
 
 def title_updater(root): # function to update the window title with wallet count and current time
     while True: # loop for ever lol
-        names, count = wallet_manager.detect_wallets() # update wallet count
-        root.title(f"MultiExodus - {count} Loaded Wallet{'s' if count != 1 else ''} | {datetime.now().strftime('%H:%M:%S')}") # update title with wallet count and current time
-        time.sleep(1) # Update every second
+        config = settings.read_config() # read settings from settings.json
+        title_template = config.get("title", "MultiExodus - {count} Loaded Wallet | {time}") # get title template from settings
+        needed_fields = set(re.findall(r"{(.*?)}", title_template)) # find all fields in the title template
+
+        values = {} # dictionary to hold field values
+        if "count" in needed_fields: # if count field is needed
+            names, count = wallet_manager.detect_wallets() # detect existing wallets
+            values["count"] = count # set count value
+        if "time" in needed_fields: # if time field is needed
+            values["time"] = datetime.now().strftime("%H:%M:%S") # set current time value
+        if "date" in needed_fields: # if date field is needed
+            values["date"] = datetime.now().strftime("%Y-%m-%d") # set current date value
+        if "username" in needed_fields: # if username field is needed
+            values["username"] = os.getlogin() # set system username value
+        if "computername" in needed_fields: # if computername field is needed
+            values["computername"] = os.environ.get("COMPUTERNAME", "Unknown") # set computer name value
+        if "exodus_version" in needed_fields: # if exodus_version field is needed
+            values["exodus_version"] = wallet_manager.get_exodus_version() # set exodus version value
+        if "motd" in needed_fields: # if motd field is needed
+            values["motd"] = motd.get_motd().strip().replace("\n", " ")[:50]  # set motd value (first 50 chars, single line)
+
+        safe_values = defaultdict(str, values) # create a defaultdict to avoid KeyErrors
+        formatted_title = title_template.format_map(safe_values) # format the title with the collected values
+
+        root.title(formatted_title) # update title with formatted title
+        if "time" in needed_fields: # if time field is needed, update every second
+            time.sleep(1) # wait 1 second before updating again
+            
+        elif "date" in needed_fields: # otherwise, update on new day
+            now = datetime.now() # get current time
+            sec_midnight = ((24 - now.hour - 1) * 3600) + ((60 - now.minute - 1) * 60) + (60 - now.second) + 1 # calculate seconds until midnight
+            time.sleep(sec_midnight + 1) # wait until just after midnight to update
+
+        else: # otherwise, update every 6 hours
+            time.sleep(21600) # wait 6 hours before updating again
 
 def center_me(root, width, height): # function to center the window on the screen
     screen_width = root.winfo_screenwidth() # get screen width
@@ -128,6 +165,7 @@ def bind_keybinds(root, first_wallet): # function to bind keybinds to the root w
     root.bind("<Delete>", lambda e: wallet_manager.delete_all_wallets(lambda: ui.rebuild(root))) # bind delete key to delete all saved wallets
 
 def main(): # main function to start the application
+    global root
     root = customtkinter.CTk(fg_color="#202020") # create the main window
     center_me(root, 1375, 700) # center the window
     root.resizable(False, False) # disable resizing

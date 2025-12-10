@@ -123,12 +123,11 @@ def show_wallet_info(wallet_name): # function to show wallet information
         if wallet_note_path.exists(): # if the wallet note file exists
             with open(wallet_note_path, "r", encoding="utf-8") as f: # open the note file
                 wallet_note = f.read() # read the note text
-        info_text = f"Wallet Name: {wallet_name}\n\nWallet Note: {wallet_note}\n\nWallet Picture: {wallet_pic_path}\n\nCreation Time: {creation_time} ({ago_time})\n\nLocation: {target_folder}" # prepare the info text
-        ctypes.windll.user32.MessageBoxW(0, info_text, "Wallet Information", 0x40) # show the wallet information
+        
+        return f"Wallet Name: {wallet_name}\nCreated On: {creation_time} ({ago_time} ago)\n\nNote: {wallet_note}\n\nImage: {wallet_pic_path}" # return the wallet information string
     else:
-        ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' does not exist.", "MultiExodus", 0x10) # show error message
-
-
+        return f"Wallet '{wallet_name}' does not exist." # return error message if wallet does not exist
+    
 def edit_wallet_name(label, folder): # function to edit wallet name
     old_name = label.current_name # get the current wallet name
     dialog = MyInputDialog(title="Edit Wallet Name", text="Enter new name:") # prompt for new wallet name
@@ -217,3 +216,11 @@ def load_wallet(wallet_name): # function to load a wallet into Exodus
     msg_b = ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' has been loaded into Exodus.\n\nDo you want to launch Exodus now?", "MultiExodus", 0x04 | 0x40) # show success message
     if msg_b == 6: # if user clicked "Yes"
         os.startfile(EXODUS_DIR / "Exodus.exe") # launch exodus
+
+def get_exodus_version(): # function to get the installed exodus version
+    app_folders = [f for f in EXODUS_DIR.iterdir() if f.is_dir() and f.name.startswith("app-")] # list of app folders
+    if not app_folders: # if no app folders found
+        return "Unknown" # return unknown version
+
+    latest_folder = max(app_folders, key=lambda f: list(map(int, f.name.replace("app-", "").split(".")))) # find the folder with the highest version number
+    return latest_folder.name.replace("app-", "") # return the version number

@@ -1,5 +1,7 @@
 from . import app, wallet_manager, constants, ui, rpc
+from CTkToolTip import CTkToolTip
 import customtkinter
+import threading
 import ctypes
 import time
 import json
@@ -19,6 +21,10 @@ def add_config(key, value): # function to add or update a setting in settings.js
             json.dump(config, f, indent=4) # write the settings to the file
     except Exception: # catch any exceptions
         ctypes.windll.user32.MessageBoxW(0, f"Failed to save settings to settings.json.\n\nPlease check file permissions.", "MultiExodus", 0x10) # show error message box
+
+def title_change(value): # function to update the window title based on settings
+    add_config("title", value) # update the setting in settings.json
+    threading.Thread(target=app.restart_title, daemon=True).start() # start a new thread to update the title
 
 def rpc_change(value): # function to handle rpc option change
     add_config("enable_rpc", value) # update the setting in settings.json
@@ -115,6 +121,18 @@ class SettingsPopup(customtkinter.CTkToplevel):
         sort_wallets_by_menu = customtkinter.CTkOptionMenu(master=scroll_frame, values=["Oldest First", "Newest First", "A-Z Alphabetical", "Z-A Alphabetical"], fg_color=scroll_bc, button_color=scroll_bc, text_color=text_color, font=("Segoe UI", 14), button_hover_color="#292929", dropdown_fg_color=scroll_bc, dropdown_text_color=text_color, dropdown_hover_color="#292929", command=lambda e: sort_change(sort_wallets_by_menu.get(), self.master))
         sort_wallets_by_menu.set(settings.get("sort_wallets_by", "Oldest First"))
         sort_wallets_by_menu.place(x=120, y=155)
+
+        title_ = settings.get("title", "MultiExodus - {count} Loaded Wallet | {time}")
+
+        custom_title_input = customtkinter.CTkEntry(master=scroll_frame, placeholder_text=title_, fg_color=scroll_bc, text_color=text_color, font=("Segoe UI", 14), width=300, border_width=0.6, border_color=scroll_bc)
+        custom_title_input.grid(padx=10, pady=10, sticky="w")
+
+        info_extra = "You can use the following variables in the custom title:\n\n{count} - Number of wallets loaded\n{time} - Current time in HH:MM:SS format\n{date} - Current date in YYYY-MM-DD format\n{username} - Current System Username\n{computername} - Current Computer Name\n{exodus_version} - Installed Exodus Version\n{motd} - Message of the Day"
+
+        CTkToolTip(custom_title_input, delay=0.5, message=info_extra)
+
+        save_title_button = customtkinter.CTkButton(master=scroll_frame, text="💾", fg_color=scroll_bc, hover_color="#292929", text_color="#FFFFFF", width=10, font=("Segoe UI", 14), command=lambda: title_change(custom_title_input.get()))
+        save_title_button.place(x=320, y=201)
 
         self.after(200, lambda: self.iconbitmap(constants.APP_ICON)) # Thank you https://github.com/aahan0511 ---> https://github.com/TomSchimansky/CustomTkinter/issues/1511#issuecomment-2586303815 
 

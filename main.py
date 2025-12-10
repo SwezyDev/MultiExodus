@@ -1,5 +1,5 @@
 from multi_exodus import main
-    
+
 if __name__ == '__main__': 
     print("Welcome to MultiExodus Wallet Manager!")
     print("-------------------------------------")

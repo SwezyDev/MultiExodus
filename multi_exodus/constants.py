@@ -16,4 +16,4 @@ DEFAULT_PNG = "./assets/title.png" # default name for new wallets
 
 GITHUB_REPO = "SwezyDev/MultiExodus" # github repository for multi exodus
 
-CLIENT_ID = "1447723044717203496" # discord application client id
+CLIENT_ID = "1447723044717203496" # discord application client id | DO NOT TOUCH IF YOU DONT KNOW WHAT YOU'RE DOING
