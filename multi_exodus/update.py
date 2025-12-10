@@ -14,7 +14,7 @@ def check_updates(msg_box): # function to check for updates
     latest_hash = get_latest_hash() # get the latest sha256 hash from github
 
     if current_hash is None or latest_hash is None:
-        ctypes.windll.user32.MessageBoxW(0, f"SHA256 calculation failed for MultiExodus. Auto-Update wont work.\n\nCheck if you're on the latest version.\nhttps://github.com/SwezyDev/MultiExodus", "MultiExodus", 0x10) # show error message box
+        ctypes.windll.user32.MessageBoxW(0, f"SHA256 calculation failed for MultiExodus. Auto-Update wont work.\n\nCheck if you're on the latest version.\nhttps://github.com/{GITHUB_REPO}", "MultiExodus", 0x10) # show error message box
         return # exit the function
     elif current_hash.lower() != latest_hash.lower():
         user_response = ctypes.windll.user32.MessageBoxW(0, f"A new version of MultiExodus is available!\n\nDo you want to download it now?", "MultiExodus", 0x04 | 0x40) # show info message box
@@ -26,8 +26,8 @@ def check_updates(msg_box): # function to check for updates
                     if user_response2 == 6: # if user clicked "Yes"
                         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, None, None, 1) # restart the application as admin
                         os._exit(0) # exit the current instance
-                ctypes.windll.user32.MessageBoxW(0, f"Failed to download the latest version of MultiExodus.\n\nPlease visit the GitHub page to download it manually.\nhttps://github.com/SwezyDev/MultiExodus", "MultiExodus", 0x10) # show error message box
-                os.system("start https://github.com/SwezyDev/MultiExodus") # open GitHub page
+                ctypes.windll.user32.MessageBoxW(0, f"Failed to download the latest version of MultiExodus.\n\nPlease visit the GitHub page to download it manually.\nhttps://github.com/{GITHUB_REPO}", "MultiExodus", 0x10) # show error message box
+                os.system("start https://github.com/{GITHUB_REPO}") # open GitHub page
             os._exit(0) # exit the application to allow user to run the new version
         else: # if user clicked "No"
             return # exit the function if user clicked "No"
