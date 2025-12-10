@@ -1,4 +1,5 @@
 from .constants import MULTI_WALLET_DIR
+from CTkToolTip import CTkToolTip
 from .tray import restart_tray
 from .rpc import restart_rpc
 from . import wallet_manager
@@ -90,6 +91,11 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
         if wallet_picture_path.exists(): # if wallet image exists, bind click event to edit image
             image_label.bind("<Button-1>", lambda e, path=wallet_picture_path: edit_img_rebuild(path, rebuild, root)) # bind click event to edit wallet image
 
+        CTkToolTip( # create tooltip for wallet frame
+            image_label, delay=0.5,
+            message=wallet_manager.show_wallet_info(wallet_name)
+        )
+
         delete_button = customtkinter.CTkButton( # create button to delete wallet
             master=standard_frame, text="🗑",
             fg_color="#202020", hover_color="#202020", text_color="#FF0000",
@@ -105,14 +111,6 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
             command=lambda lbl=label: wallet_manager.open_wallet(lbl.current_name)
         )
         folder_button.place(x=215, y=30) # place the folder button at top-right corner
-
-        info_button = customtkinter.CTkButton( # create button to show wallet info
-            master=standard_frame, text="ⓘ",
-            fg_color="#202020", hover_color="#202020", text_color="#6495ED",
-            font=("Segoe UI", 14), width=0, height=0,
-            command=lambda lbl=label: wallet_manager.show_wallet_info(lbl.current_name)
-        )
-        info_button.place(x=218, y=55) # place the info button at top-right corner
 
     add_frame_index = count # index for the "Add Wallet"
     add_frame_row = add_frame_index // 5 # row position
