@@ -1,0 +1,7 @@
+customtkinter
+CTkToolTip
+Pillow
+psutil
+pypresence
+pystray
+requests
