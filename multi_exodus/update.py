@@ -1,9 +1,9 @@
-from .constants import GITHUB_REPO
-import requests
-import hashlib
-import ctypes
-import sys
-import os
+from .constants import GITHUB_REPO # import the github repository constant
+import requests # for making http requests
+import hashlib # for sha256 hashing
+import ctypes # for Windows message boxes
+import sys # for sys.executable
+import os # for os operations
 
 sha256_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/main/MultiExodus.sha256" # url to the sha256 hash file
 api_url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest" # github api url for latest release
@@ -13,15 +13,15 @@ def check_updates(msg_box): # function to check for updates
     current_hash = sha256_get(sys.executable) # get the sha256 hash of the current executable
     latest_hash = get_latest_hash() # get the latest sha256 hash from github
 
-    if current_hash is None or latest_hash is None:
+    if current_hash is None or latest_hash is None: # if unable to get either hash
         ctypes.windll.user32.MessageBoxW(0, f"SHA256 calculation failed for MultiExodus. Auto-Update wont work.\n\nCheck if you're on the latest version.\nhttps://github.com/{GITHUB_REPO}", "MultiExodus", 0x10) # show error message box
         return # exit the function
-    elif current_hash.lower() != latest_hash.lower():
+    elif current_hash.lower() != latest_hash.lower(): # if the hashes do not match (new version available)
         user_response = ctypes.windll.user32.MessageBoxW(0, f"A new version of MultiExodus is available!\n\nDo you want to download it now?", "MultiExodus", 0x04 | 0x40) # show info message box
         if user_response == 6: # if user clicked "Yes"
             r = download_latest() # download the latest version
             if not r: # if download failed
-                if not ctypes.windll.shell32.IsUserAnAdmin():
+                if not ctypes.windll.shell32.IsUserAnAdmin(): # if not running as admin
                     user_response2 = ctypes.windll.user32.MessageBoxW(0, f"Failed to download the latest version of MultiExodus.\n\nWant to retry as administrator?", "MultiExodus", 0x04 | 0x10) # show error message box
                     if user_response2 == 6: # if user clicked "Yes"
                         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, None, None, 1) # restart the application as admin
@@ -32,16 +32,16 @@ def check_updates(msg_box): # function to check for updates
         else: # if user clicked "No"
             return # exit the function if user clicked "No"
         
-    if msg_box:
+    if msg_box: # if msg_box parameter is True
         ctypes.windll.user32.MessageBoxW(0, f"You are running the latest version of MultiExodus.", "MultiExodus", 0x40) # show info message box
 
 def get_latest_hash(): # function to get the sha256 hash of the latest release executable
-    try:
+    try: # make a get request to the sha256 url
         response = requests.get(sha256_url) # make a get request to the sha256 url
         response.raise_for_status() # raise an error for bad responses
         hash_text = response.text.strip() # get the hash text from the response
         return hash_text # return the hash text
-    except Exception:
+    except Exception: # catch any exceptions
         return None # return None if there was an error
 
 def sha256_get(path): # function to get the sha256 hash of a file
@@ -57,7 +57,7 @@ def sha256_get(path): # function to get the sha256 hash of a file
         return None # return None if there was an error
 
 def download_latest(): # function to download the latest release executable
-    try:
+    try: # make a get request to the github api to get the latest release info
         response = requests.get(api_url) # make a get request to the api
         response.raise_for_status() # raise an error for bad responses
         release_data = response.json() # parse the json response
@@ -83,5 +83,5 @@ def download_latest(): # function to download the latest release executable
 
         os.startfile(installer_name) # run the installer
         return True # return True on success
-    except Exception as e:
+    except Exception: # catch any exceptions
         return False # return False on failure

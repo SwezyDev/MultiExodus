@@ -1,7 +1,7 @@
-from .constants import CLIENT_ID, GITHUB_REPO
-import pypresence
-import asyncio
-import time
+from .constants import CLIENT_ID, GITHUB_REPO # import constants
+import pypresence # for discord rpc
+import asyncio # for async operations
+import time # for time operations
 
 RPC = None # global rpc client
 start_time = int(time.time()) # rpc start time

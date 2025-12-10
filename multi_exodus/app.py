@@ -1,14 +1,14 @@
-from . import wallet_manager, ui, info, settings, update, motd, tray, constants, rpc
-from collections import defaultdict
-from datetime import datetime
-import customtkinter
-import threading
-import ctypes
-import psutil
-import time
-import sys
-import os
-import re
+from . import wallet_manager, ui, info, settings, update, motd, tray, constants, rpc # import necessary modules
+from collections import defaultdict # for defaultdict
+from datetime import datetime # for date and time handling
+import customtkinter # for custom tkinter widgets
+import threading # for threading
+import ctypes # for windows api calls
+import psutil # for process management
+import time # for time operations
+import sys # for system operations
+import os # for operating system interactions
+import re # for regular expressions
 
 def restart_title(): # function to restart the title updater thread
     threading.Thread(target=title_updater, args=(root,), daemon=True).start() # start title updater thread
@@ -131,7 +131,7 @@ def interpolate_color(start_color, end_color, factor): # function to interpolate
     start_rgb = [int(start_color[i:i+2], 16) for i in (1, 3, 5)] # convert start color to rgb
     end_rgb = [int(end_color[i:i+2], 16) for i in (1, 3, 5)] # convert end color to rgb
     result_rgb = [ # interpolate each color channel
-        int(start_rgb[j] + (end_rgb[j] - start_rgb[j]) * factor) 
+        int(start_rgb[j] + (end_rgb[j] - start_rgb[j]) * factor)
         for j in range(3) # for each color channel (r, g, b)
     ]
     return f"#{result_rgb[0]:02x}{result_rgb[1]:02x}{result_rgb[2]:02x}" # convert back to hex color
@@ -165,7 +165,7 @@ def bind_keybinds(root, first_wallet): # function to bind keybinds to the root w
     root.bind("<Delete>", lambda e: wallet_manager.delete_all_wallets(lambda: ui.rebuild(root))) # bind delete key to delete all saved wallets
 
 def main(): # main function to start the application
-    global root
+    global root # use the global root variable
     root = customtkinter.CTk(fg_color="#202020") # create the main window
     center_me(root, 1375, 700) # center the window
     root.resizable(False, False) # disable resizing
