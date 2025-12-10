@@ -85,7 +85,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * 📦 Dependencies:
 
   ```bash
-  pip install pillow customtkinter
+  pip install customtkinter CTkToolTip Pillow psutil pypresence pystray requests
   ```
 * 💻 [Exodus](https://www.exodus.com/download) installed and working.
 * 💾 Access to your Exodus installation directory and multi-wallet folder (ensure the app has permission to read/write files).
