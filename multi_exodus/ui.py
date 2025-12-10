@@ -1,10 +1,10 @@
-from .constants import MULTI_WALLET_DIR
-from CTkToolTip import CTkToolTip
-from .tray import restart_tray
-from .rpc import restart_rpc
-from . import wallet_manager
-from PIL import Image
-import customtkinter
+from .constants import MULTI_WALLET_DIR # for multi-wallet directory path
+from CTkToolTip import CTkToolTip # for tooltips
+from .tray import restart_tray # for restarting the tray icon
+from .rpc import restart_rpc # for restarting the rpc server
+from . import wallet_manager # for wallet management functions
+from PIL import Image # for image handling
+import customtkinter # for custom tkinter widgets
 
 scroll_frame = None # global variable to hold the scrollable frame
 
@@ -21,10 +21,10 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
     global scroll_frame # use the global scroll_frame variable
 
     if scroll_frame is not None: # if scroll_frame already exists, destroy it
-        try: 
+        try: # attempt to destroy existing scroll_frame
             scroll_frame.destroy() # destroy the existing scroll_frame
-        except Exception:
-            pass
+        except Exception: # catch any exceptions
+            pass # ignore exceptions
 
     scroll_frame = customtkinter.CTkScrollableFrame(master=root, width=1355, height=680, fg_color="#202020") # create a new scrollable frame
     scroll_frame.place(x=10, y=10) # place the scrollable frame in the main window

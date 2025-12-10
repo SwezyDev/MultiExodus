@@ -1,5 +1,5 @@
-from pathlib import Path
-import os
+from pathlib import Path # for path manipulations
+import os # for operating system interactions
 
 LOCAL_APPDATA = Path(os.getenv("LOCALAPPDATA")) # windows local appdata folder
 ROAMING_APPDATA = Path(os.getenv("APPDATA")) # windows roaming appdata folder

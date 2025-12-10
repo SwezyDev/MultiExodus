@@ -1,13 +1,13 @@
-from .constants import MULTI_WALLET_DIR, EXODUS_WALLET, EXODUS_DIR, DEFAULT_PNG
-from customtkinter import filedialog
-from .dialogs import MyInputDialog
-from PIL import Image, ImageDraw
-from pathlib import Path
-from . import settings
-import ctypes
-import shutil
-import time
-import os
+from .constants import MULTI_WALLET_DIR, EXODUS_WALLET, EXODUS_DIR, DEFAULT_PNG # for directory and file paths
+from customtkinter import filedialog # for file dialogs
+from .dialogs import MyInputDialog # for custom input dialogs
+from PIL import Image, ImageDraw # for image processing
+from pathlib import Path # for path manipulations
+from . import settings # for reading settings
+import ctypes # for Windows message boxes
+import shutil # for file operations
+import time # for time.time() and time.ctime()
+import os # for os.startfile and os.system
 
 def change_standard_picture(popup): # function to change the standard wallet picture
     file_path = filedialog.askopenfilename(title="Select new standard wallet picture", filetypes=[("PNG Images", "*.png")]) # open file dialog to select new image
@@ -159,7 +159,7 @@ def open_wallet(wallet_name): # function to open the wallet folder in file explo
     target_folder = MULTI_WALLET_DIR / wallet_name # path to the wallet folder
     if target_folder.exists() and target_folder.is_dir(): # if the wallet folder exists
         os.startfile(target_folder) # open the wallet folder in file explorer
-    else:
+    else: # if the wallet folder does not exist
         ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' does not exist.", "MultiExodus", 0x10) # show error message
 
 
@@ -173,7 +173,7 @@ def delete_all_wallets(callback): # function to delete all saved wallets
         )
     else: # if the multi-wallet directory does not exist
         ctypes.windll.user32.MessageBoxW(0, f"No saved wallets found.", "MultiExodus", 0x10) # show error message
-        return
+        return # exit the function
 
     msg_box = ctypes.windll.user32.MessageBoxW(0, f"Are you sure you want to delete ALL saved wallets?\nThis action cannot be undone.\n\n- " + '\n- '.join(all_wallets), "MultiExodus", 0x04 | 0x10) # show confirmation dialog
 
@@ -182,7 +182,7 @@ def delete_all_wallets(callback): # function to delete all saved wallets
             shutil.rmtree(MULTI_WALLET_DIR) # delete the multi-wallet directory
             ctypes.windll.user32.MessageBoxW(0, f"All saved wallets have been deleted.", "MultiExodus", 0x40) # show success message
             callback() # rebuild the ui with the updated wallet list
-        else:
+        else: # if the multi-wallet directory does not exist
             ctypes.windll.user32.MessageBoxW(0, f"No saved wallets found.", "MultiExodus", 0x10) # show error message
 
 def delete_wallet(wallet_name, callback): # function to delete a wallet
@@ -195,7 +195,7 @@ def delete_wallet(wallet_name, callback): # function to delete a wallet
             shutil.rmtree(target_folder) # delete the wallet folder
             ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' has been deleted.", "MultiExodus", 0x40) # show success message
             callback() # rebuild the ui with the updated wallet list
-        else:
+        else: # if the wallet folder does not exist
             ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' does not exist.", "MultiExodus", 0x10) # show error message
 
 
@@ -209,7 +209,7 @@ def load_wallet(wallet_name): # function to load a wallet into Exodus
     if (EXODUS_WALLET / "exodus.wallet").exists(): # if there is an existing exodus wallet
         shutil.rmtree(EXODUS_WALLET / "exodus.wallet") # remove existing exodus wallet folder
 
-    def ignore_files(dir, files):
+    def ignore_files(dir, files): # function to ignore certain files when copying
         return [f for f in files if f in ("note.txt", "title.png")] # ignore note and title image files when copying
 
     shutil.copytree(target_folder, EXODUS_WALLET / "exodus.wallet", ignore=ignore_files) # copy the selected wallet to the exodus wallet folder

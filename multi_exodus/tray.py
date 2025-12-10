@@ -1,7 +1,7 @@
-from . import settings, update, info, wallet_manager, motd, ui, constants
-from PIL import Image
-import threading
-import pystray
+from . import settings, update, info, wallet_manager, motd, ui, constants # import necessary modules
+from PIL import Image # for image handling
+import threading # for threading
+import pystray # for system tray icon
 
 tray_icon = None # global variable to hold the tray icon
 
@@ -49,9 +49,9 @@ def create(root, first_wallet): # function to create the system tray icon and me
 
     threading.Thread(target=icon.run, daemon=True).start() # run the tray icon in a separate thread
 
-def restart_tray(root, first_wallet):
-    global tray_icon
-    if tray_icon is not None:
-        tray_icon.stop()
+def restart_tray(root, first_wallet): # function to restart the tray icon
+    global tray_icon # use the global tray_icon variable
+    if tray_icon is not None: # if tray_icon exists, stop it
+        tray_icon.stop() # stop the existing tray icon
 
-    create(root, first_wallet)
+    create(root, first_wallet) # create a new tray icon
