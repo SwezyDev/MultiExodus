@@ -30,7 +30,7 @@ def start_rpc(intx): # function to start the rpc client
         small_text="Free and Open Source on GitHub",
         start=start_time,
         buttons=[{"label": "Download MultiExodus", "url": f"https://github.com/{GITHUB_REPO}"}, 
-                 {"label": "Download Exodus", "url": "https://www.exodus.com/download/"}
+                 {"label": "Website", "url": "https://multiexodus.vercel.app"}
                 ]
     )
 
