@@ -150,7 +150,7 @@ def load_app(root, pre_frame): # function to load the main application
 
 def bind_keybinds(root, first_wallet): # function to bind keybinds to the root window
     with open(constants.INFO_PATH, "r", encoding="utf-8") as f: # load info text from file
-        info_text = f.read()
+        info_text = f.read() # read the entire content of the file
 
     root.bind("<Escape>", lambda e: root.quit()) # bind escape key to quit the app
     root.bind("<F1>", lambda e: info.InfoPopup(root, title="Multi Exodus Information", text=info_text, text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind F1 key to show info popup

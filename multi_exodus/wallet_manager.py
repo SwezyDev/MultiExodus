@@ -21,7 +21,7 @@ def change_standard_picture(popup): # function to change the standard wallet pic
 def open_data_location(): # function to open the MultiExodus data location in file explorer
     if MULTI_WALLET_DIR.exists() and MULTI_WALLET_DIR.is_dir(): # if the multi-wallet directory exists
         os.startfile(MULTI_WALLET_DIR) # open the multi-wallet directory in file explorer
-    else:
+    else: # if the multi-wallet directory does not exist
         ctypes.windll.user32.MessageBoxW(0, f"MultiExodus data directory does not exist.", "MultiExodus", 0x10) # show error message
 
 def detect_wallets(): # function to detect existing wallets
@@ -84,7 +84,7 @@ def add_wallet(root, callback): # function to add a new wallet
 
         import_wallet(root, callback) # call the import wallet function
 
-    else:
+    else: # if user clicked "No"
         return # user cancelled the operation
 
 
