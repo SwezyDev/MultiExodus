@@ -26,8 +26,12 @@ def start_rpc(intx): # function to start the rpc client
         details=f"Managing {intx} Exodus Wallet{'s' if intx != 1 else ''}",
         large_image="multiexodus-logo",
         large_text="MultiExodus - Manage Multiple Exodus Wallets",
+        small_image="github-logo",
+        small_text="Free and Open Source on GitHub",
         start=start_time,
-        buttons=[{"label": "Download MultiExodus", "url": f"https://github.com/{GITHUB_REPO}"}, {"label": "Download Exodus", "url": "https://www.exodus.com/download/"}]
+        buttons=[{"label": "Download MultiExodus", "url": f"https://github.com/{GITHUB_REPO}"}, 
+                 {"label": "Download Exodus", "url": "https://www.exodus.com/download/"}
+                ]
     )
 
 def stop_rpc(): # function to stop the rpc client

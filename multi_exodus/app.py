@@ -10,46 +10,93 @@ import sys # for system operations
 import os # for operating system interactions
 import re # for regular expressions
 
+title_stop_event = threading.Event() # event to signal title updater thread to stop
+title_thread = None # global variable to hold the title updater thread
+title_lock = threading.Lock() # make thread start thread-safe
+
 def restart_title(): # function to restart the title updater thread
-    threading.Thread(target=title_updater, args=(root,), daemon=True).start() # start title updater thread
+    global title_thread, title_stop_event # use global variables
+
+    with title_lock: # ensure thread-safe operation
+        if title_thread and title_thread.is_alive(): # if title thread is running, stop it
+            title_stop_event.set() # signal the thread to stop
+            title_thread.join() # wait for the thread to finish
+
+        title_stop_event.clear() # clear the stop event for the new thread
+        title_thread = threading.Thread(target=title_updater, args=(root,), daemon=True) # create a new title updater thread
+        title_thread.start() # start the new title updater thread
+
 
 def title_updater(root): # function to update the window title with wallet count and current time
-    while True: # loop for ever lol
+    last_slow_update = 0 # timestamp of last slow update
+    slow_update = 3600  # update slow fields every hour
+    cached_values = {} # cache for slow updating fields
+
+    def eepy_cat(sec): # helper function to sleep with stop event checking
+        for i in range(sec): # loop for the number of seconds
+            if title_stop_event.is_set(): # check if stop event is set
+                return True # exit if stop event is set
+            time.sleep(1) # sleep for 1 second
+        return False # return False if completed without stop event
+
+    while not title_stop_event.is_set(): # loop until stop event is set
         config = settings.read_config() # read settings from settings.json
-        title_template = config.get("title", "MultiExodus - {count} Loaded Wallet | {time}") # get title template from settings
+        title_template = config.get("title", "MultiExodus - {count} Loaded {s} | {time}") # get title template from settings
         needed_fields = set(re.findall(r"{(.*?)}", title_template)) # find all fields in the title template
 
-        values = {} # dictionary to hold field values
-        if "count" in needed_fields: # if count field is needed
-            names, count = wallet_manager.detect_wallets() # detect existing wallets
-            values["count"] = count # set count value
-        if "time" in needed_fields: # if time field is needed
-            values["time"] = datetime.now().strftime("%H:%M:%S") # set current time value
-        if "date" in needed_fields: # if date field is needed
-            values["date"] = datetime.now().strftime("%Y-%m-%d") # set current date value
-        if "username" in needed_fields: # if username field is needed
-            values["username"] = os.getlogin() # set system username value
-        if "computername" in needed_fields: # if computername field is needed
-            values["computername"] = os.environ.get("COMPUTERNAME", "Unknown") # set computer name value
-        if "exodus_version" in needed_fields: # if exodus_version field is needed
-            values["exodus_version"] = wallet_manager.get_exodus_version() # set exodus version value
-        if "motd" in needed_fields: # if motd field is needed
-            values["motd"] = motd.get_motd().strip().replace("\n", " ")[:50]  # set motd value (first 50 chars, single line)
+        now_ts = time.time() # current timestamp
+        slow_update_needed = (now_ts - last_slow_update) >= slow_update # check if slow update is needed
 
-        safe_values = defaultdict(str, values) # create a defaultdict to avoid KeyErrors
+        cached_values = {k: v for k, v in cached_values.items() if k in needed_fields} # remove cached values that are no longer needed
+
+        if slow_update_needed: # if slow update is needed
+            if "count" in needed_fields: # if count field is needed
+                names, count = wallet_manager.detect_wallets() # detect existing wallets
+                cached_values["count"] = count # set count value
+
+            if "s" in needed_fields: # if s field is needed
+                if "count" not in cached_values: # if count is not already cached
+                    names, count = wallet_manager.detect_wallets() # detect existing wallets
+                cached_values["s"] = "Wallets" if count != 1 else "Wallet" # set plural s value
+
+            if "date" in needed_fields: # if date field is needed
+                cached_values["date"] = datetime.now().strftime("%Y-%m-%d") # set current date value
+
+            if "username" in needed_fields: # if username field is needed
+                cached_values["username"] = os.getlogin() # set system username value
+
+            if "computername" in needed_fields: # if computername field is needed
+                cached_values["computername"] = os.environ.get("COMPUTERNAME", "Unknown") # set computer name value
+
+            if "exodus_version" in needed_fields: # if exodus_version field is needed
+                cached_values["exodus_version"] = wallet_manager.get_exodus_version() # set exodus version value
+
+            if "motd" in needed_fields: # if motd field is needed
+                cached_values["motd"] = motd.get_motd().strip().replace("\n", " ")[:50]  # set motd value (first 50 chars, single line)
+
+            last_slow_update = now_ts # update last slow update timestamp
+
+        if "time" in needed_fields: # if time field is needed
+            cached_values["time"] = datetime.now().strftime("%H:%M:%S") # set current time value
+
+        safe_values = defaultdict(str, cached_values) # create a defaultdict to avoid KeyErrors
         formatted_title = title_template.format_map(safe_values) # format the title with the collected values
 
         root.title(formatted_title) # update title with formatted title
+
         if "time" in needed_fields: # if time field is needed, update every second
-            time.sleep(1) # wait 1 second before updating again
+            if eepy_cat(1): # wait 1 second before updating again
+                break # exit if stop event is set
             
         elif "date" in needed_fields: # otherwise, update on new day
             now = datetime.now() # get current time
             sec_midnight = ((24 - now.hour - 1) * 3600) + ((60 - now.minute - 1) * 60) + (60 - now.second) + 1 # calculate seconds until midnight
-            time.sleep(sec_midnight + 1) # wait until just after midnight to update
+            if eepy_cat(sec_midnight + 1): # wait until just after midnight to update
+                break # exit if stop event is set
 
         else: # otherwise, update every 6 hours
-            time.sleep(21600) # wait 6 hours before updating again
+            if eepy_cat(21600): # wait 6 hours before updating again
+                break # exit if stop event is set
 
 def center_me(root, width, height): # function to center the window on the screen
     screen_width = root.winfo_screenwidth() # get screen width
