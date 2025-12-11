@@ -1,6 +1,6 @@
 from multi_exodus import main # import the main function from multi_exodus module
 
-if __name__ == '__main__': 
+if __name__ == '__main__': # if this script is run directly
     print("Welcome to MultiExodus Wallet Manager!") # print a welcome message
     print("-------------------------------------") # print a separator line
     print("Made with love by Swezy <3") # print the author's name
