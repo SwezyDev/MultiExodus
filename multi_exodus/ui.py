@@ -9,12 +9,13 @@ import customtkinter # for custom tkinter widgets
 scroll_frame = None # global variable to hold the scrollable frame
 
 def rebuild(root): # function to rebuild the ui
-    from .app import bind_keybinds # import bind_keybinds function to rebind keys
+    from .app import bind_keybinds, restart_title # import bind_keybinds and restart_title functions
     scroll_frame.destroy() # destroy current scroll frame
     names, count = wallet_manager.detect_wallets() # detect wallets again
     bind_keybinds(root, names[0] if names else None) # rebind keybinds
     restart_tray(root, names[0] if names else None) # restart the tray icon to refresh menu
     build_wallets_ui(root, names, count) # rebuild the ui with updated wallet list
+    restart_title() # restart the window title with updated wallet count
     restart_rpc(count) # restart the rpc server with updated wallet count
 
 def build_wallets_ui(root, names, count): # function to build the wallets ui

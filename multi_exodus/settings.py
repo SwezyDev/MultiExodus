@@ -122,12 +122,14 @@ class SettingsPopup(customtkinter.CTkToplevel): # settings popup window class
         sort_wallets_by_menu.set(settings.get("sort_wallets_by", "Oldest First")) # set current value from settings
         sort_wallets_by_menu.place(x=120, y=155) # place the option menu
 
-        title_ = settings.get("title", "MultiExodus - {count} Loaded Wallet | {time}") # get current title setting
+        title_ = settings.get("title", "MultiExodus - {count} Loaded {s} | {time}") # get current title setting
 
         custom_title_input = customtkinter.CTkEntry(master=scroll_frame, placeholder_text=title_, fg_color=scroll_bc, text_color=text_color, font=("Segoe UI", 14), width=300, border_width=0.6, border_color=scroll_bc) # entry for custom title
         custom_title_input.grid(padx=10, pady=10, sticky="w") # place the entry in the grid
 
-        info_extra = "You can use the following variables in the custom title:\n\n{count} - Number of wallets loaded\n{time} - Current time in HH:MM:SS format\n{date} - Current date in YYYY-MM-DD format\n{username} - Current System Username\n{computername} - Current Computer Name\n{exodus_version} - Installed Exodus Version\n{motd} - Message of the Day" # tooltip info for custom title
+        custom_title_input.insert(0, title_) # insert current title into entry
+
+        info_extra = "You can use the following variables in the custom title:\n\n{s} - Say Wallet or Wallets if count is 1 or more\n{count} - Number of wallets loaded\n{time} - Current time in HH:MM:SS format\n{date} - Current date in YYYY-MM-DD format\n{username} - Current System Username\n{computername} - Current Computer Name\n{exodus_version} - Installed Exodus Version\n{motd} - Message of the Day" # tooltip info for custom title
 
         CTkToolTip(custom_title_input, delay=0.5, message=info_extra) # create tooltip for custom title entry
 
