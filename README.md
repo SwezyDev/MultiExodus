@@ -127,7 +127,8 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ├─ LICENSE ➔ License file
 ├─ MultiExodus.sha256 ➔ SHA256 file for Auto-Updater
 ├─ README.md ➔ Read me file
-└─ main.py ➔ Start the Application
+├─ main.py ➔ Start the Application
+└─ requirements.txt ➔ Packages that are required to run the Application
 ```
 
 ---
