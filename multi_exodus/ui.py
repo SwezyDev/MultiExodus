@@ -8,7 +8,7 @@ import customtkinter # for custom tkinter widgets
 
 scroll_frame = None # global variable to hold the scrollable frame
 
-def rebuild(root): # function to rebuild the ui
+def rebuild(root, extra=False): # function to rebuild the ui
     from .app import bind_keybinds, restart_title # import bind_keybinds and restart_title functions
     scroll_frame.destroy() # destroy current scroll frame
     names, count = wallet_manager.detect_wallets() # detect wallets again
