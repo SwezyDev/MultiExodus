@@ -34,7 +34,7 @@ def rpc_change(value): # function to handle rpc option change
     else: # if rpc is disabled
         rpc.stop_rpc() # stop the rpc server
 
-def sort_change(value, root): # function to handle sort option change
+def sort_change(value, root, extra=False): # function to handle sort option change
     add_config("sort_wallets_by", value) # update the setting in settings.json
     ui.rebuild(root) # rebuild the UI to reflect the new sorting
 
