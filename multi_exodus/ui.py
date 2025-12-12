@@ -15,8 +15,9 @@ def rebuild(root, extra=False): # function to rebuild the ui
     bind_keybinds(root, names[0] if names else None) # rebind keybinds
     restart_tray(root, names[0] if names else None) # restart the tray icon to refresh menu
     build_wallets_ui(root, names, count) # rebuild the ui with updated wallet list
-    restart_title() # restart the window title with updated wallet count
-    restart_rpc(count) # restart the rpc server with updated wallet count
+    if extra:
+        restart_title() # restart the window title with updated wallet count
+        restart_rpc(count) # restart the rpc server with updated wallet count
 
 def build_wallets_ui(root, names, count): # function to build the wallets ui
     global scroll_frame # use the global scroll_frame variable
