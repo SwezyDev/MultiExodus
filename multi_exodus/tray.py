@@ -24,7 +24,7 @@ def create(root, first_wallet): # function to create the system tray icon and me
         pystray.MenuItem("────────────────", lambda: None, enabled=False),
         pystray.MenuItem("Show Information", lambda: info.InfoPopup(root, title="Multi Exodus Information", text=info_text, text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")),
         pystray.MenuItem("Check for Updates", lambda: update.check_updates(msg_box=True)),
-        pystray.MenuItem("Refresh Wallets UI", lambda: ui.rebuild(root)),
+        pystray.MenuItem("Refresh Wallets UI", lambda: ui.rebuild(root, extra=False)),
         pystray.MenuItem("────────────────", lambda: None, enabled=False),
         pystray.MenuItem("Add New Wallet", lambda: wallet_manager.add_wallet(root, lambda r=root: ui.build_wallets_ui(root, *wallet_manager.detect_wallets()))),
         pystray.MenuItem("Load First Wallet", lambda: wallet_manager.load_wallet(first_wallet)),

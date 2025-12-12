@@ -141,4 +141,4 @@ def edit_img_rebuild(path, rebuild, root): # helper function to edit wallet imag
     if file_path: # if a file was selected
         pil_image = Image.open(file_path).resize((130, 130)) # open and resize the selected image
         pil_image.save(path) # save the new image to the specified path
-        rebuild(root) # rebuild the UI to reflect the changes
+        rebuild(root, extra=False) # rebuild the UI to reflect the changes
