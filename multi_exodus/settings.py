@@ -23,7 +23,7 @@ def add_config(key, value): # function to add or update a setting in settings.js
         ctypes.windll.user32.MessageBoxW(0, f"Failed to save settings to settings.json.\n\nPlease check file permissions.", "MultiExodus", 0x10) # show error message box
 
 def title_change(value): # function to update the window title based on settings
-    add_config("title", value, extra=True) # update the setting in settings.json
+    add_config("title", value) # update the setting in settings.json
     threading.Thread(target=app.restart_title, daemon=True).start() # start a new thread to update the title
 
 def rpc_change(value): # function to handle rpc option change
