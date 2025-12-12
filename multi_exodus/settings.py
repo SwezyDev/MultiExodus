@@ -36,7 +36,7 @@ def rpc_change(value): # function to handle rpc option change
 
 def sort_change(value, root, extra=False): # function to handle sort option change
     add_config("sort_wallets_by", value) # update the setting in settings.json
-    ui.rebuild(root) # rebuild the UI to reflect the new sorting
+    ui.rebuild(root, extra) # rebuild the UI to reflect the new sorting
 
 def time_ago(timestamp): # function to convert timestamp to "time ago" format
     seconds_ago = time.time() - timestamp # calculate seconds ago
