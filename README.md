@@ -38,6 +38,18 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 
 ---
 
+## 🕒 Todo (Planned Features)
+* 📱 Add **Grid Layout** Customization
+* 🎉 Add **Color** Customization
+* 🔎 Add **Search** function
+* 🏷️ Add **Tags** function
+* 🔔 Add **Toast** Notifications
+* 🌐 Create a modern **Web-App** (Upgrade the GUI)
+
+> 💡 View the `TODO` file in this repository.
+
+---
+
 ## 🎹 Keybinds
 * ❌ **ESC** — Close Windows
 * 🗑️ **DEL** — Delete all Wallets
