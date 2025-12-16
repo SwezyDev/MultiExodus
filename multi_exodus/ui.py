@@ -24,8 +24,14 @@ def rebuild(root, extra=True): # function to rebuild the ui
         restart_title() # restart the window title with updated wallet count
         restart_rpc(count) # restart the rpc server with updated wallet count
 
+def toggle_layout(): # function to toggle between grid and list layout
+    global layout_mode # use the global layout_mode variable
+    layout_mode = "list" if layout_mode == "grid" else "grid" # toggle layout mode
+    layout_button.configure(text="☷" if layout_mode == "list" else "☰") # update button text
+    on_search()  # rerender with the new layout
+
 def build_wallets_ui(root, names, count): # function to build the wallets ui
-    global scroll_frame, search_frame, wallet_cache, layout_mode # use the global scroll_frame, search_frame variables
+    global scroll_frame, search_frame, wallet_cache, layout_mode, layout_button, on_search # use the global scroll_frame, search_frame variables
 
     if scroll_frame is not None: # if scroll_frame already exists, destroy it
         try: # attempt to destroy existing scroll_frame
@@ -54,12 +60,6 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
         placeholder_text="Search Wallets..."
     )
     search_bar.place(x=0, y=0) # place the search bar below the scrollable frame
-
-    def toggle_layout(): # function to toggle between grid and list layout
-        global layout_mode # use the global layout_mode variable
-        layout_mode = "list" if layout_mode == "grid" else "grid" # toggle layout mode
-        layout_button.configure(text="☷" if layout_mode == "list" else "☰") # update button text
-        on_search()  # rerender with the new layout
     
     layout_button = customtkinter.CTkButton( # create a button to toggle layout
         master=root, text="☷" if layout_mode == "list" else "☰",
