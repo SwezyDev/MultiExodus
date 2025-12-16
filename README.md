@@ -40,6 +40,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ---
 
 ## 🕒 Todo (Planned Features)
+* 🔐 Add **Protection** (Wallet Data Encryption/Decryption) — Next Update
 * 🎉 Add **Color** Customization — Maybe next Update
 * 🌐 Create a modern **Web-App** (Upgrade the GUI) — Unknown
 > 💡 View the `TODO` file in this repository.
