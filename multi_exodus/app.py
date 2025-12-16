@@ -216,6 +216,7 @@ def bind_keybinds(root, first_wallet): # function to bind keybinds to the root w
     root.bind("-", lambda e: wallet_manager.delete_wallet(first_wallet, ui.rebuild(root), config.get("show_toasts", True))) # bind - key to delete a wallet
     root.bind("*", lambda e: wallet_manager.load_wallet(first_wallet, config.get("show_toasts", True))) # bind * key to load a wallet
     root.bind("<Delete>", lambda e: wallet_manager.delete_all_wallets(lambda: ui.rebuild(root), config.get("show_toasts", True))) # bind delete key to delete all saved wallets
+    root.bind("<Alt_L>", lambda e: ui.toggle_layout()) # bind left alt key to toggle wallet layout
 
 def main(): # main function to start the application
     global root # use the global root variable

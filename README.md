@@ -49,6 +49,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ## 🎹 Keybinds
 * ❌ **ESC** — Close Windows
 * 🗑️ **DEL** — Delete all Wallets
+* 📱 **ALT_L** — Switch Wallet Layout
 * ℹ️ **F1** — Show Information Box
 * ⚙️ **F2** — Show Settings Menu
 * 📂 **F3** — Show Data Folder

@@ -12,6 +12,7 @@ Distributed under the MIT License.
 
 ESC: Close Window
 DEL: Delete all Wallets
+ALT_L: Switch Wallet Layout
 F1: Show this Information Box
 F2: Show Settings Menu
 F3: Show Data Folder
@@ -20,6 +21,7 @@ F5: Reload Wallets
 +: Add a Wallet
 -: Delete the First Wallet
 *: Load First Wallet
+
 
 GitHub: https://github.com/SwezyDev/MultiExodus
 Contact: https://t.me/Swezy
