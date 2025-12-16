@@ -39,12 +39,12 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ---
 
 ## 🕒 Todo (Planned Features)
-* 📱 Add **Grid Layout** Customization
-* 🎉 Add **Color** Customization
-* 🔎 Add **Search** function
-* 🏷️ Add **Tags** function
-* 🔔 Add **Toast** Notifications
-* 🌐 Create a modern **Web-App** (Upgrade the GUI)
+* 📱 Add **Grid Layout** Customization — Next Update
+* 🎉 Add **Color** Customization — Maybe next Update
+* 🔎 Add **Search** function — Next Update
+* 🏷️ Add **Tags** function — Next Update
+* 🔔 Add **Toast** Notifications — Next Update
+* 🌐 Create a modern **Web-App** (Upgrade the GUI) — Unknown
 
 > 💡 View the `TODO` file in this repository.
 
