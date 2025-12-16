@@ -27,11 +27,12 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 
 ## ✨ Features
 
-* 💼 **Multi-Wallet Management** — Detect, add, edit, and delete multiple Exodus wallets in a single interface.
+* 💼 **Multi-Wallet Management** — Detect, search, add, edit, and delete multiple Exodus wallets in a single interface.
 * 🔄 **Seamless Wallet Switching** — Load any wallet into Exodus instantly with one click, without manual file handling.
 * 🗂️ **Backup & Recovery Automation** — Automatically trigger Exodus recovery mode, backup existing wallets, and restore seed phrases safely.
-* 🖼️ **Custom Wallet Notes & Images** — Assign personalized names, notes, and images to each wallet for easy identification.
-* 📊 **Organized UI** — Scrollable, grid-based layout with clean, sortable, interactive frames built using CustomTkinter.
+* 🖼️ **Custom Wallet Notes & Images** — Assign personalized names, notes, tags, and images to each wallet for easy identification.
+* 🔔 **Toast Notifications** — Instant, non-intrusive alerts for everything in MultiExodus, and background tasks—always keeping you informed without interruptions.
+* 📊 **Organized UI** — Scrollable, grid-based OR List layout with clean, sortable, interactive frames built using CustomTkinter.
 * ✅ **Safety Prompts** — Confirmation dialogs for sensitive actions like deleting or overwriting wallets to prevent accidental loss.
 * ⭐ **Auto-Updater** — Automatically checks for new versions, verifies integrity with SHA-256, downloads updates securely, and installs them with one click.
 * 🖥 **Discord RPC** — Show your friends that you're using MultiExodus
@@ -39,13 +40,8 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ---
 
 ## 🕒 Todo (Planned Features)
-* 📱 Add **Grid Layout** Customization — Next Update
 * 🎉 Add **Color** Customization — Maybe next Update
-* 🔎 Add **Search** function — Next Update
-* 🏷️ Add **Tags** function — Next Update
-* 🔔 Add **Toast** Notifications — Next Update
 * 🌐 Create a modern **Web-App** (Upgrade the GUI) — Unknown
-
 > 💡 View the `TODO` file in this repository.
 
 ---
@@ -66,7 +62,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ---
 
 ## 📥 Easy Installation
-1. Download the [Installer](https://github.com/SwezyDev/MultiExodus/releases/download/1.0.0/Multi.Exodus.Installer.exe)
+1. Download the [Installer](https://github.com/SwezyDev/MultiExodus/releases/download/2.0.0/Multi.Exodus.Installer.exe)
 2. Follow the Installer Instructions
 3. Run Multi Exodus
 
@@ -132,15 +128,18 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 │ ├─ motd.py ➔ Custom Message of the Day box
 │ ├─ rpc.py ➔ Discord RPC handling
 │ ├─ settings.py ➔ Custom Settings box to configure MultiExodus
+│ ├─ toast.py ➔ Windows Toast Notification handle
 │ ├─ tray.py ➔ Tray Icon on Taskbar to control MultiExodus
 │ ├─ ui.py ➔ Builds the scrollable wallet interface and handles UI interactions
 │ ├─ update.py ➔ Auto-Update Helper Functions for MultiExodus
 │ └─ wallet_manager.py ➔ Manage, edit, and load Exodus wallets with backup support
+├─ .gitignore ➔ Specifies files and directories Git should ignore
 ├─ LICENSE ➔ License file
 ├─ MultiExodus.sha256 ➔ SHA256 file for Auto-Updater
 ├─ README.md ➔ Read me file
 ├─ main.py ➔ Start the Application
-└─ requirements.txt ➔ Packages that are required to run the Application
+├─ requirements.txt ➔ Packages that are required to run the Application
+└─ TODO ➔ Planned Features & Improvements
 ```
 
 ---
@@ -178,6 +177,7 @@ You can see that a file was created by Exodus called `restore-mnemonic` in the `
 * Updates window title with wallet count and current time via a `background thread`.
 * Validates the running executable with `SHA-256`, checks GitHub for newer releases, downloads the latest installer, and launches it using `os.startfile`.
 * Connects to Discord RPC via `pypresence` using the `Application ID` from the discord developer portal.
+* Uses `win10toast` for Windows Toast Notifications.
 
 ---
 

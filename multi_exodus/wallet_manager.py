@@ -2,6 +2,7 @@ from .constants import MULTI_WALLET_DIR, EXODUS_WALLET, EXODUS_DIR, DEFAULT_PNG 
 from customtkinter import filedialog # for file dialogs
 from .dialogs import MyInputDialog # for custom input dialogs
 from PIL import Image, ImageDraw # for image processing
+from .toast import show_toast # for showing toast notifications
 from pathlib import Path # for path manipulations
 from . import settings # for reading settings
 import ctypes # for Windows message boxes
@@ -59,7 +60,7 @@ def round_corners(image, radius): # function to round the corners of an image
     return rounded # return the rounded image
 
 
-def add_wallet(root, callback): # function to add a new wallet
+def add_wallet(root, callback, show_toasts): # function to add a new wallet
     backup_wallet = EXODUS_WALLET / f"exodus.wallet_{int(time.time())}_backup" # path for backing up current wallet
 
     msg_box = ctypes.windll.user32.MessageBoxW(0, f"We will now Trigger the Exodus Recovery Mode.\nYou will be asked to input your Seed Phrase, please follow the instructions from Exodus.\n\nDo you want to continue?", "MultiExodus", 0x04 | 0x40) # show confirmation dialog
@@ -70,7 +71,7 @@ def add_wallet(root, callback): # function to add a new wallet
             if msg_box2 == 6: # if user clicked "Yes" to backup
                 shutil.copytree(EXODUS_WALLET / "exodus.wallet", backup_wallet, dirs_exist_ok=True) # backup the current wallet
             elif msg_box2 == 2: # if user clicked "Cancel" to import wallet
-                import_wallet(root, callback) # call the import wallet function
+                import_wallet(root, callback, show_toasts) # call the import wallet function
                 return # exit the add_wallet function
 
         restore_file = EXODUS_WALLET / "restore-mnemonic" # path to the restore mnemonic file
@@ -82,13 +83,13 @@ def add_wallet(root, callback): # function to add a new wallet
 
         os.system("taskkill /f /im Exodus.exe >nul 2>&1") # kill exodus after restoration
 
-        import_wallet(root, callback) # call the import wallet function
+        import_wallet(root, callback, show_toasts) # call the import wallet function
 
     else: # if user clicked "No"
         return # user cancelled the operation
 
 
-def import_wallet(root, callback): # function to import an existing wallet folder
+def import_wallet(root, callback, show_toasts): # function to import an existing wallet folder
     dialog = MyInputDialog(master=root, title="Edit Wallet Name", text="Enter new name:") # prompt for new wallet name
 
     new_name = dialog.get_input() # get the inputted wallet name
@@ -108,11 +109,14 @@ def import_wallet(root, callback): # function to import an existing wallet folde
         if asset_src.exists(): # if the default image exists
             shutil.copy(asset_src, target_folder / "title.png") # copy the default image to the new wallet folder
 
+        if show_toasts: # if show_toasts is enabled
+            show_toast("MultiExodus", f"Wallet '{new_name}' imported successfully!") # show toast notification
+    
         ctypes.windll.user32.MessageBoxW(0, f"Exodus wallet successfully imported as '{new_name}'", "MultiExodus", 0x40) # show success message
 
         callback(root) # rebuild the UI with the new wallet
 
-def show_wallet_info(wallet_name): # function to show wallet information
+def show_wallet_info(wallet_name, tags): # function to show wallet information
     target_folder = MULTI_WALLET_DIR / wallet_name # path to the wallet folder
     if target_folder.exists() and target_folder.is_dir(): # if the wallet folder exists
         creation_time = time.ctime(target_folder.stat().st_ctime) # get the creation time of the wallet folder
@@ -124,7 +128,7 @@ def show_wallet_info(wallet_name): # function to show wallet information
             with open(wallet_note_path, "r", encoding="utf-8") as f: # open the note file
                 wallet_note = f.read() # read the note text
         
-        return f"Wallet Name: {wallet_name}\nCreated On: {creation_time} ({ago_time} ago)\n\nNote: {wallet_note}\n\nImage: {wallet_pic_path}" # return the wallet information string
+        return f"Wallet Name: {wallet_name}\nCreated On: {creation_time} ({ago_time} ago)\n\nNote: {wallet_note}\nTags: {', '.join(tags) if tags else 'No Tags'}\n\nImage: {wallet_pic_path}" # return the wallet information string
     else:
         return f"Wallet '{wallet_name}' does not exist." # return error message if wallet does not exist
     
@@ -163,7 +167,7 @@ def open_wallet(wallet_name): # function to open the wallet folder in file explo
         ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' does not exist.", "MultiExodus", 0x10) # show error message
 
 
-def delete_all_wallets(callback): # function to delete all saved wallets
+def delete_all_wallets(callback, show_toasts): # function to delete all saved wallets
     os.system("taskkill /f /im Exodus.exe >nul 2>&1") # kill exodus to avoid file access issues
 
     if MULTI_WALLET_DIR.exists(): # if the multi-wallet directory exists
@@ -180,12 +184,14 @@ def delete_all_wallets(callback): # function to delete all saved wallets
     if msg_box == 6: # if user confirmed deletion
         if MULTI_WALLET_DIR.exists() and MULTI_WALLET_DIR.is_dir(): # if the multi-wallet directory exists
             shutil.rmtree(MULTI_WALLET_DIR) # delete the multi-wallet directory
-            ctypes.windll.user32.MessageBoxW(0, f"All saved wallets have been deleted.", "MultiExodus", 0x40) # show success message
+            if show_toasts: # if show_toasts is enabled
+                show_toast("MultiExodus", "All saved wallets have been deleted!") # show toast notification
+            ctypes.windll.user32.MessageBoxW(0, f"All saved wallets have been deleted.", "MultiExodus", 0x40) # show success message 
             callback() # rebuild the ui with the updated wallet list
         else: # if the multi-wallet directory does not exist
             ctypes.windll.user32.MessageBoxW(0, f"No saved wallets found.", "MultiExodus", 0x10) # show error message
 
-def delete_wallet(wallet_name, callback): # function to delete a wallet
+def delete_wallet(wallet_name, callback, show_toasts): # function to delete a wallet
     os.system("taskkill /f /im Exodus.exe >nul 2>&1") # kill exodus to avoid file access issues
     msg_box = ctypes.windll.user32.MessageBoxW(0, f"Are you sure you want to delete the wallet '{wallet_name}'?\nThis action cannot be undone.", "MultiExodus", 0x04 | 0x10) # show confirmation dialog
 
@@ -193,13 +199,15 @@ def delete_wallet(wallet_name, callback): # function to delete a wallet
         target_folder = MULTI_WALLET_DIR / wallet_name # path to the wallet folder
         if target_folder.exists() and target_folder.is_dir(): # if the wallet folder exists
             shutil.rmtree(target_folder) # delete the wallet folder
+            if show_toasts: # if show_toasts is enabled
+                show_toast("MultiExodus", f"Wallet '{wallet_name}' has been deleted!") # show toast notification
             ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' has been deleted.", "MultiExodus", 0x40) # show success message
             callback() # rebuild the ui with the updated wallet list
         else: # if the wallet folder does not exist
             ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' does not exist.", "MultiExodus", 0x10) # show error message
 
 
-def load_wallet(wallet_name): # function to load a wallet into Exodus
+def load_wallet(wallet_name, show_toasts): # function to load a wallet into Exodus
     os.system("taskkill /f /im Exodus.exe >nul 2>&1") # kill exodus to avoid file access issues
     target_folder = MULTI_WALLET_DIR / wallet_name # path to the wallet folder
     if not target_folder.exists(): # if the wallet folder does not exist
@@ -213,6 +221,8 @@ def load_wallet(wallet_name): # function to load a wallet into Exodus
         return [f for f in files if f in ("note.txt", "title.png")] # ignore note and title image files when copying
 
     shutil.copytree(target_folder, EXODUS_WALLET / "exodus.wallet", ignore=ignore_files) # copy the selected wallet to the exodus wallet folder
+    if show_toasts: # if show_toasts is enabled
+        show_toast("MultiExodus", f"Wallet '{wallet_name}' loaded into Exodus!") # show toast notification
     msg_b = ctypes.windll.user32.MessageBoxW(0, f"Wallet '{wallet_name}' has been loaded into Exodus.\n\nDo you want to launch Exodus now?", "MultiExodus", 0x04 | 0x40) # show success message
     if msg_b == 6: # if user clicked "Yes"
         os.startfile(EXODUS_DIR / "Exodus.exe") # launch exodus
@@ -224,3 +234,51 @@ def get_exodus_version(): # function to get the installed exodus version
 
     latest_folder = max(app_folders, key=lambda f: list(map(int, f.name.replace("app-", "").split(".")))) # find the folder with the highest version number
     return latest_folder.name.replace("app-", "") # return the version number
+
+def get_wallet_tags(wallet_name): # function to get tags for a wallet
+    targ_path = MULTI_WALLET_DIR / wallet_name / "tags.txt" # path to the wallet's tags file
+    if targ_path.exists(): # if tags file exists
+        with open(targ_path, "r", encoding="utf-8") as tags_file: # open the tags file
+            tags_text = tags_file.read().strip() # read the tags text
+            if tags_text: # if tags text is not empty
+                return [tag.strip() for tag in tags_text.split(",")][:5] # return list of tags (max 5 tags)
+    return [] # return empty list if no tags
+
+def edit_wallet_tags(wallet_name, new_tags, callback): # function to edit tags for a wallet
+    dialog = MyInputDialog(title="Edit Wallet Tags", text="Enter new tags (comma separated, max 5):") # prompt for new wallet tags
+    tags_input = dialog.get_input() # get the inputted wallet tags
+    if tags_input and tags_input.strip() != "": # if a valid input was provided
+        targ_path = MULTI_WALLET_DIR / wallet_name / "tags.txt" # path to the wallet's tags file
+
+        existing_tags = [] # list to hold existing tags
+        if targ_path.exists(): # if tags file exists
+            with open(targ_path, "r", encoding="utf-8") as f: # open the tags file
+                existing_tags = [tag.strip() for tag in f.read().split(",") if tag.strip()] # read existing tags
+
+        new_tags = [tag.strip() for tag in tags_input.split(",") if tag.strip()] # process the input into a list of tag
+
+        merged_tags = [] # list to hold merged tags
+        for tag in existing_tags + new_tags: # iterate through existing and new tags
+            if tag not in merged_tags: # if tag is not already in merged list
+                merged_tags.append(tag) # add tag to merged list
+
+        merged_tags = merged_tags[:5] # limit to max 5 tags
+
+        with open(targ_path, "w", encoding="utf-8") as tags_file: # open the tags file for writing
+            tags_file.write(", ".join(merged_tags)) # write the new tags (max 5 tags)
+            
+        callback() # rebuild the UI with updated tags
+
+def delete_wallet_tag(wallet_name, tag_to_delete, callback): # delete a single tag from a wallet
+    targ_path = MULTI_WALLET_DIR / wallet_name / "tags.txt" # path to the wallet's tags file
+    if not targ_path.exists(): # if tags file does not exist
+        return callback() # exit the function
+    with open(targ_path, "r", encoding="utf-8") as tags_file: # open the tags file
+        tags_text = tags_file.read().strip() # read the tags text
+    if not tags_text: # if tags text is empty
+        return callback() # exit the function
+    existing = [t.strip() for t in tags_text.split(",") if t.strip()] # process existing tags into a list
+    remaining = [t for t in existing if t.lower() != str(tag_to_delete).lower()] # filter out the tag to delete
+    with open(targ_path, "w", encoding="utf-8") as tags_file: # open the tags file for writing
+        tags_file.write(", ".join(remaining[:5])) # write the remaining tags (max 5 tags)
+    callback() # rebuild the UI with updated tags

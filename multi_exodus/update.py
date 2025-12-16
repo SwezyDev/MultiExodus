@@ -1,4 +1,5 @@
 from .constants import GITHUB_REPO # import the github repository constant
+from .toast import show_toast # for showing toast notifications
 import requests # for making http requests
 import hashlib # for sha256 hashing
 import ctypes # for Windows message boxes
@@ -9,7 +10,7 @@ sha256_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/main/M
 api_url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest" # github api url for latest release
 installer_name = "Multi.Exodus.Installer.exe" # name of the installer file
 
-def check_updates(msg_box): # function to check for updates
+def check_updates(msg_box, config): # function to check for updates
     current_hash = sha256_get(sys.executable) # get the sha256 hash of the current executable
     latest_hash = get_latest_hash() # get the latest sha256 hash from github
 
@@ -19,7 +20,7 @@ def check_updates(msg_box): # function to check for updates
     elif current_hash.lower() != latest_hash.lower(): # if the hashes do not match (new version available)
         user_response = ctypes.windll.user32.MessageBoxW(0, f"A new version of MultiExodus is available!\n\nDo you want to download it now?", "MultiExodus", 0x04 | 0x40) # show info message box
         if user_response == 6: # if user clicked "Yes"
-            r = download_latest() # download the latest version
+            r = download_latest(config) # download the latest version
             if not r: # if download failed
                 if not ctypes.windll.shell32.IsUserAnAdmin(): # if not running as admin
                     user_response2 = ctypes.windll.user32.MessageBoxW(0, f"Failed to download the latest version of MultiExodus.\n\nWant to retry as administrator?", "MultiExodus", 0x04 | 0x10) # show error message box
@@ -56,7 +57,7 @@ def sha256_get(path): # function to get the sha256 hash of a file
     except Exception as e: # catch any exceptions
         return None # return None if there was an error
 
-def download_latest(): # function to download the latest release executable
+def download_latest(config): # function to download the latest release executable
     try: # make a get request to the github api to get the latest release info
         response = requests.get(api_url) # make a get request to the api
         response.raise_for_status() # raise an error for bad responses
@@ -71,6 +72,9 @@ def download_latest(): # function to download the latest release executable
 
         if not download_url: # if no download url found
             return False # return False
+        
+        if config.get("show_toasts", True): # check if show_toasts is enabled in settings
+            show_toast("MultiExodus", "Please be patient while the download completes.") # show toast notification
 
         if os.path.exists(installer_name): # remove existing installer if it exists
             os.remove(installer_name) # remove existing installer
