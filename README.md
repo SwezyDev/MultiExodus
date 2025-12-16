@@ -27,7 +27,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 
 ## ✨ Features
 
-* 💼 **Multi-Wallet Management** — Detect, search, add, edit, and delete multiple Exodus wallets in a single interface.
+* 💼 **Multi-Wallet Management** — Detect, search, star, add, edit, and delete multiple Exodus wallets in a single interface.
 * 🔄 **Seamless Wallet Switching** — Load any wallet into Exodus instantly with one click, without manual file handling.
 * 🗂️ **Backup & Recovery Automation** — Automatically trigger Exodus recovery mode, backup existing wallets, and restore seed phrases safely.
 * 🖼️ **Custom Wallet Notes & Images** — Assign personalized names, notes, tags, and images to each wallet for easy identification.

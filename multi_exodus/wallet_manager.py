@@ -123,12 +123,13 @@ def show_wallet_info(wallet_name, tags): # function to show wallet information
         ago_time = settings.time_ago(target_folder.stat().st_ctime) # get how long ago the wallet was created
         wallet_note_path = target_folder / "note.txt" # path to the wallet note file
         wallet_pic_path = target_folder / "title.png" # path to the wallet picture file
+        starred_bool = is_wallet_starred(wallet_name) # check if the wallet is starred
         wallet_note = "None" # default note text
         if wallet_note_path.exists(): # if the wallet note file exists
             with open(wallet_note_path, "r", encoding="utf-8") as f: # open the note file
                 wallet_note = f.read() # read the note text
         
-        return f"Wallet Name: {wallet_name}\nCreated On: {creation_time} ({ago_time} ago)\n\nNote: {wallet_note}\nTags: {', '.join(tags) if tags else 'No Tags'}\n\nImage: {wallet_pic_path}" # return the wallet information string
+        return f"Wallet Name: {wallet_name}\nStarred: {starred_bool}\nCreated On: {creation_time} ({ago_time} ago)\nNote: {wallet_note}\nTags: {', '.join(tags) if tags else 'No Tags'}\n\nImage: {wallet_pic_path}" # return the wallet information string
     else:
         return f"Wallet '{wallet_name}' does not exist." # return error message if wallet does not exist
     
@@ -282,3 +283,15 @@ def delete_wallet_tag(wallet_name, tag_to_delete, callback): # delete a single t
     with open(targ_path, "w", encoding="utf-8") as tags_file: # open the tags file for writing
         tags_file.write(", ".join(remaining[:5])) # write the remaining tags (max 5 tags)
     callback() # rebuild the UI with updated tags
+
+def is_wallet_starred(wallet_name): # function to check if a wallet is starred
+    star_path = MULTI_WALLET_DIR / wallet_name / "starred.txt" # path to the wallet's starred file
+    return star_path.exists() # return True if starred file exists
+
+def toggle_wallet_star(wallet_name, callback): # function to toggle starred status for a wallet
+    star_path = MULTI_WALLET_DIR / wallet_name / "starred.txt" # path to the wallet's starred file
+    if star_path.exists(): # if wallet is already starred
+        star_path.unlink() # remove the starred file
+    else: # if wallet is not starred
+        star_path.touch() # create the starred file
+    callback() # call the callback function

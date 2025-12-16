@@ -74,7 +74,18 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
 
     wallet_cache = list(names) # populate wallet_cache with wallet names
 
+    def sort_wallets_by_star(wallet_list): # function to sort wallets with starred ones first
+        starred = [] # list for starred wallets
+        unstarred = [] # list for unstarred wallets
+        for wallet in wallet_list: # iterate through wallets
+            if wallet_manager.is_wallet_starred(wallet): # if wallet is starred
+                starred.append(wallet) # add to starred list
+            else: # if wallet is not starred
+                unstarred.append(wallet) # add to unstarred list
+        return starred + unstarred # return starred wallets first, then unstarred
+
     def render_wallets(wallet_list, show_add_frame=True):
+        wallet_list = sort_wallets_by_star(wallet_list) # sort wallets with starred ones first
         for widget in scroll_frame.winfo_children(): # clear existing wallet frames
             widget.destroy() # destroy each child widget in the scrollable frame
 
@@ -174,6 +185,15 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
             )
             folder_button.place(x=215, y=30) # place the folder button at top-right corner
 
+            star_icon = " ★" if wallet_manager.is_wallet_starred(wallet_name) else " ☆" # determine star icon
+            star_button = customtkinter.CTkButton( # create button to toggle wallet star
+                master=standard_frame, text=star_icon,
+                fg_color="#202020", hover_color="#202020", text_color="#006EFF",
+                font=("Segoe UI", 14), width=0, height=0,
+                command=lambda lbl=label: wallet_manager.toggle_wallet_star(lbl.current_name, lambda: rebuild(root, extra=False))
+            )
+            star_button.place(x=213, y=55) # place the star button below folder button
+
         add_frame_index = count # index for the "Add Wallet"
         add_frame_row = add_frame_index // 5 # row position
         add_frame_col = add_frame_index % 5 # column position
@@ -198,7 +218,7 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
     def render_list_layout(wallet_list, show_add_frame=True): # function to render wallets in list layout
         for i, wallet_name in enumerate(wallet_list): # create wallet frames for each detected wallet
             standard_frame = customtkinter.CTkFrame( # create a frame for each wallet
-                master=scroll_frame, width=1320, height=180,
+                master=scroll_frame, width=1330, height=180,
                 fg_color="#202020", border_color="#414141",
                 border_width=0.6, corner_radius=12
             )
@@ -277,7 +297,7 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
             load_button = customtkinter.CTkButton( # create button to load wallet
                 master=standard_frame, text="Load Wallet",
                 fg_color="#414141", hover_color="#2C2C2C",
-                font=("Segoe UI", 14), width=1124, height=35,
+                font=("Segoe UI", 14), width=1134, height=35,
                 command=lambda lbl=label: wallet_manager.load_wallet(lbl.current_name, config.get("show_toasts", True))
             )
             load_button.place(x=180, y=130, anchor="nw") # place the load button stretched at the bottom
@@ -299,7 +319,7 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
                 font=("Segoe UI", 14), width=0, height=0,
                 command=lambda lbl=label: wallet_manager.delete_wallet(lbl.current_name, lambda: rebuild(root), config.get("show_toasts", True))
             )
-            delete_button.place(x=1270, y=10) # place the delete button at top-right corner
+            delete_button.place(x=1280, y=10) # place the delete button at top-right corner
 
             folder_button = customtkinter.CTkButton( # create button to open wallet location
                 master=standard_frame, text="📂",
@@ -307,11 +327,20 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
                 font=("Segoe UI", 14), width=0, height=0,
                 command=lambda lbl=label: wallet_manager.open_wallet(lbl.current_name)
             )
-            folder_button.place(x=1270, y=40) # place the folder button below delete button
+            folder_button.place(x=1280, y=40) # place the folder button below delete button
+
+            star_icon = " ★" if wallet_manager.is_wallet_starred(wallet_name) else " ☆" # determine star icon
+            star_button = customtkinter.CTkButton( # create button to toggle wallet star
+                master=standard_frame, text=star_icon,
+                fg_color="#202020", hover_color="#202020", text_color="#006EFF",
+                font=("Segoe UI", 14), width=0, height=0,
+                command=lambda lbl=label: wallet_manager.toggle_wallet_star(lbl.current_name, lambda: rebuild(root, extra=False))
+            )
+            star_button.place(x=1278, y=70) # place the star button below folder button
 
         if show_add_frame: # only show add_frame if show_add_frame is True
             add_frame = customtkinter.CTkFrame( # create frame for "Add Wallet"
-                master=scroll_frame, width=1320, height=180,
+                master=scroll_frame, width=1330, height=180,
                 fg_color="#181818", border_color="#414141",
                 border_width=0.6, corner_radius=12
             )
