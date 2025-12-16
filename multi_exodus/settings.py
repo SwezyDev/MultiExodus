@@ -1,4 +1,4 @@
-from . import app, wallet_manager, constants, ui, rpc # import necessary modules
+from . import constants # import necessary modules
 from CTkToolTip import CTkToolTip # for tooltips
 import customtkinter # for custom tkinter widgets
 import threading # for threading
@@ -23,18 +23,25 @@ def add_config(key, value): # function to add or update a setting in settings.js
         ctypes.windll.user32.MessageBoxW(0, f"Failed to save settings to settings.json.\n\nPlease check file permissions.", "MultiExodus", 0x10) # show error message box
 
 def title_change(value): # function to update the window title based on settings
+    from . import app # lazy import to avoid circular dependency
     add_config("title", value) # update the setting in settings.json
     threading.Thread(target=app.restart_title, daemon=True).start() # start a new thread to update the title
 
-def rpc_change(value): # function to handle rpc option change
+def rpc_change(value, config): # function to handle rpc option change
+    from . import wallet_manager, toast, rpc # lazy import to avoid circular dependency
     add_config("enable_rpc", value) # update the setting in settings.json
     if value: # if rpc is enabled
         names, count = wallet_manager.detect_wallets() # detect wallets to get current count
+        if config.get("show_toasts", True): # check if show_toasts is enabled in settings
+            toast.show_toast("MultiExodus", "Discord RPC will be restarted...") # show toast notification
         rpc.restart_rpc(count) # restart the rpc server with current wallet count
     else: # if rpc is disabled
+        if config.get("show_toasts", True): # check if show_toasts is enabled in settings
+            toast.show_toast("MultiExodus", "Discord RPC will be stopped...") # show toast notification
         rpc.stop_rpc() # stop the rpc server
 
 def sort_change(value, root, extra=False): # function to handle sort option change
+    from . import ui # lazy import to avoid circular dependency
     add_config("sort_wallets_by", value) # update the setting in settings.json
     ui.rebuild(root, extra) # rebuild the UI to reflect the new sorting
 
@@ -65,6 +72,7 @@ def time_ago(timestamp): # function to convert timestamp to "time ago" format
 class SettingsPopup(customtkinter.CTkToplevel): # settings popup window class
     def __init__(self, master=None, title="Settings Popup", text_color="#FFFFFF",
                 fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141"): # constructor with customizable colors
+        from . import app, wallet_manager # lazy import to avoid circular dependency
         super().__init__(master) # initialize the parent class
         self.title(title) # set the window title
         app.center_me(self, 400, 500) # center the window on the screen
@@ -84,6 +92,11 @@ class SettingsPopup(customtkinter.CTkToplevel): # settings popup window class
         else: # if not set, default to False
             rpc_value = False # default to False
 
+        if settings.get("show_toasts", True): # get show_toasts setting
+            show_toasts_value = True # if set, use True
+        else: # if not set, default to True
+            show_toasts_value = True # default to True
+
         scroll_frame = customtkinter.CTkScrollableFrame(master=self, width=360, height=460, fg_color=scroll_fg, border_color=scroll_bc, border_width=0.6) # create scrollable frame
         scroll_frame.grid(padx=10, pady=10) # place the scrollable frame in the window
 
@@ -96,8 +109,14 @@ class SettingsPopup(customtkinter.CTkToplevel): # settings popup window class
         rpc_label = customtkinter.CTkLabel(master=scroll_frame, text="Enable Discord RPC:", fg_color=fg_color, text_color=text_color, font=("Segoe UI", 14)) # label for rpc option
         rpc_label.grid(padx=10, pady=10, sticky="w") # place the label in the grid
 
-        rpc_cb = customtkinter.CTkCheckBox(master=scroll_frame, text="", fg_color=scroll_bc, text_color=text_color, hover_color=scroll_bc, font=("Segoe UI", 14), border_width=0.6, border_color=scroll_bc, command=lambda: rpc_change(rpc_cb.get())) # checkbox for rpc
+        rpc_cb = customtkinter.CTkCheckBox(master=scroll_frame, text="", fg_color=scroll_bc, text_color=text_color, hover_color=scroll_bc, font=("Segoe UI", 14), border_width=0.6, border_color=scroll_bc, command=lambda: rpc_change(rpc_cb.get(), settings)) # checkbox for rpc
         rpc_cb.place(x=140, y=59.5) # place the checkbox
+
+        toast_label = customtkinter.CTkLabel(master=scroll_frame, text="Show Toast Notifications:", fg_color=fg_color, text_color=text_color, font=("Segoe UI", 14)) # label for toast notifications option
+        toast_label.grid(padx=10, pady=10, sticky="w") # place the label in the grid
+
+        toast_cb = customtkinter.CTkCheckBox(master=scroll_frame, text="", fg_color=scroll_bc, text_color=text_color, hover_color=scroll_bc, font=("Segoe UI", 14), border_width=0.6, border_color=scroll_bc, command=lambda: add_config("show_toasts", toast_cb.get())) # checkbox for toast notifications
+        toast_cb.place(x=170, y=109) # place the checkbox
 
         if bypass_updates_value: # if bypass_updates is enabled
             bypass_updates_cb.select() # select the checkbox
@@ -109,18 +128,23 @@ class SettingsPopup(customtkinter.CTkToplevel): # settings popup window class
         else: # if rpc is disabled
             rpc_cb.deselect() # deselect the checkbox
 
+        if show_toasts_value: # if show_toasts is enabled 
+            toast_cb.select() # select the checkbox
+        else: # if show_toasts is disabled
+            toast_cb.deselect() # deselect the checkbox
+
         change_standard_picture = customtkinter.CTkLabel(master=scroll_frame, text="Change Standard Wallet Picture:", fg_color=fg_color, text_color=text_color, font=("Segoe UI", 14)) # label for changing standard wallet picture
         change_standard_picture.grid(padx=10, pady=10, sticky="w") # place the label in the grid
 
         change_standard_picture_button = customtkinter.CTkButton(master=scroll_frame, text=" . . . ", fg_color=scroll_bc, hover_color="#292929", text_color="#FFFFFF", width=20, font=("Segoe UI", 14), command=lambda: wallet_manager.change_standard_picture(self)) # button to change standard wallet picture
-        change_standard_picture_button.place(x=220, y=106.5) # place the button
+        change_standard_picture_button.place(x=220, y=155.3) # place the button
 
         sort_wallets_by_label = customtkinter.CTkLabel(master=scroll_frame, text="Sort Wallets By:", fg_color=fg_color, text_color=text_color, font=("Segoe UI", 14)) # label for sorting wallets
         sort_wallets_by_label.grid(padx=10, pady=10, sticky="w") # place the label in the grid
 
         sort_wallets_by_menu = customtkinter.CTkOptionMenu(master=scroll_frame, values=["Oldest First", "Newest First", "A-Z Alphabetical", "Z-A Alphabetical"], fg_color=scroll_bc, button_color=scroll_bc, text_color=text_color, font=("Segoe UI", 14), button_hover_color="#292929", dropdown_fg_color=scroll_bc, dropdown_text_color=text_color, dropdown_hover_color="#292929", command=lambda e: sort_change(sort_wallets_by_menu.get(), self.master)) # option menu for sorting wallets
         sort_wallets_by_menu.set(settings.get("sort_wallets_by", "Oldest First")) # set current value from settings
-        sort_wallets_by_menu.place(x=120, y=155) # place the option menu
+        sort_wallets_by_menu.place(x=120, y=203) # place the option menu
 
         title_ = settings.get("title", "MultiExodus - {count} Loaded {s} | {time}") # get current title setting
 
@@ -134,7 +158,15 @@ class SettingsPopup(customtkinter.CTkToplevel): # settings popup window class
         CTkToolTip(custom_title_input, delay=0.5, message=info_extra) # create tooltip for custom title entry
 
         save_title_button = customtkinter.CTkButton(master=scroll_frame, text="💾", fg_color=scroll_bc, hover_color="#292929", text_color="#FFFFFF", width=10, font=("Segoe UI", 14), command=lambda: title_change(custom_title_input.get())) # button to save custom title
-        save_title_button.place(x=320, y=201) # place the save button
+        save_title_button.place(x=320, y=250.2) # place the save button
+
+        # For next update
+
+        #export_theme = customtkinter.CTkButton(master=scroll_frame, text="Export Theme Settings", width=165, height=30, fg_color=scroll_bc, hover_color="#292929", text_color="#FFFFFF", font=("Segoe UI", 14), command=lambda: theme.export_theme_settings(self)) # button to export theme settings
+        #export_theme.grid(padx=10, pady=10, sticky="w") # place the export theme button
+
+        #import_theme = customtkinter.CTkButton(master=scroll_frame, text="Import Theme Settings", width=165, height=30, fg_color=scroll_bc, hover_color="#292929", text_color="#FFFFFF", font=("Segoe UI", 14), command=lambda: theme.import_theme_settings(self)) # button to import theme settings
+        #import_theme.place(x=188, y=298) # place the import theme button
 
         self.after(200, lambda: self.iconbitmap(constants.APP_ICON)) # set the window icon (Thank you https://github.com/aahan0511 ---> https://github.com/TomSchimansky/CustomTkinter/issues/1511#issuecomment-2586303815)
 

@@ -1,5 +1,6 @@
 from . import wallet_manager, ui, info, settings, update, motd, tray, constants, rpc # import necessary modules
 from collections import defaultdict # for defaultdict
+from .toast import show_toast # for showing toast notifications
 from datetime import datetime # for date and time handling
 import customtkinter # for custom tkinter widgets
 import threading # for threading
@@ -25,7 +26,6 @@ def restart_title(): # function to restart the title updater thread
         title_stop_event.clear() # clear the stop event for the new thread
         title_thread = threading.Thread(target=title_updater, args=(root,), daemon=True) # create a new title updater thread
         title_thread.start() # start the new title updater thread
-
 
 def title_updater(root): # function to update the window title with wallet count and current time
     last_slow_update = 0 # timestamp of last slow update
@@ -132,7 +132,7 @@ def search_win(): # function to search for existing window by title
     return handles if handles else None # return the matching handle or None
 
 
-def check_proc(): # function to check if another instance of the app is running
+def check_proc(config): # function to check if another instance of the app is running
     curr_pid = os.getpid() # get current process id
     exe_name = os.path.basename(sys.argv[0]).lower() # get current executable name
 
@@ -154,17 +154,21 @@ def check_proc(): # function to check if another instance of the app is running
                 hwnd = search_win() # search for existing window
                 for h in hwnd: # focus all found windows
                     focus_window(h) # focus the existing window
+                if config.get("show_toasts", True): # check if show_toasts is enabled in settings
+                    show_toast("MultiExodus", "Another instance of MultiExodus is already running.") # show toast notification
                 os._exit(0) # exit the current instance
 
     return # no other instance found
 
 def pre_check(): # function to perform pre-checks before starting the app
-    check_proc() # check if another instance is running
-
     config = settings.read_config() # read settings from settings.json
+    check_proc(config) # check if another instance is running
+
+    if config.get("show_toasts", True): # check if show_toasts is enabled in settings
+        show_toast("MultiExodus", f"Welcome back, {os.getlogin()}") # show startup toast notification
 
     if not config.get("bypass_updates", False): # check if bypass updates is not enabled in settings
-        update.check_updates(msg_box=False) # check for updates unless bypassed in settings
+        update.check_updates(msg_box=False, config=config) # check for updates unless bypassed in settings
     
     if not constants.MULTI_WALLET_DIR.exists(): # check if the MultiExodus directory exists
         constants.MULTI_WALLET_DIR.mkdir(parents=True, exist_ok=True) # create the directory if it doesnt exist
@@ -199,17 +203,19 @@ def bind_keybinds(root, first_wallet): # function to bind keybinds to the root w
     with open(constants.INFO_PATH, "r", encoding="utf-8") as f: # load info text from file
         info_text = f.read() # read the entire content of the file
 
+    config = settings.read_config() # read settings from settings.json
+
     root.bind("<Escape>", lambda e: root.quit()) # bind escape key to quit the app
     root.bind("<F1>", lambda e: info.InfoPopup(root, title="Multi Exodus Information", text=info_text, text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind F1 key to show info popup
     root.bind("<F2>", lambda e: settings.SettingsPopup(root, title="Multi Exodus Settings", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind F2 key to open settings popup (not implemented yet)
     root.bind("<F3>", lambda e: wallet_manager.open_data_location()) # bind F3 key to open data location in file explorer
-    root.bind("<F4>", lambda e: update.check_updates(msg_box=True)) # bind F4 to check for updates
+    root.bind("<F4>", lambda e: update.check_updates(msg_box=True, config=config)) # bind F4 to check for updates
     root.bind("<F5>", lambda e: ui.rebuild(root, extra=False)) # bind F5 key to refresh the wallets ui
     root.bind("m", lambda e: motd.MotdPopup(root, title="Message of the Day", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind m key to show message of the day popup
-    root.bind("+", lambda e: wallet_manager.add_wallet(root, lambda r=root: ui.build_wallets_ui(root, *wallet_manager.detect_wallets()))) # bind + key to add a new wallet
-    root.bind("-", lambda e: wallet_manager.delete_wallet(first_wallet, ui.rebuild(root))) # bind - key to delete a wallet
-    root.bind("*", lambda e: wallet_manager.load_wallet(first_wallet)) # bind * key to load a wallet
-    root.bind("<Delete>", lambda e: wallet_manager.delete_all_wallets(lambda: ui.rebuild(root))) # bind delete key to delete all saved wallets
+    root.bind("+", lambda e: wallet_manager.add_wallet(root, lambda r=root: ui.build_wallets_ui(root, *wallet_manager.detect_wallets()), config.get("show_toasts", True))) # bind + key to add a new wallet
+    root.bind("-", lambda e: wallet_manager.delete_wallet(first_wallet, ui.rebuild(root), config.get("show_toasts", True))) # bind - key to delete a wallet
+    root.bind("*", lambda e: wallet_manager.load_wallet(first_wallet, config.get("show_toasts", True))) # bind * key to load a wallet
+    root.bind("<Delete>", lambda e: wallet_manager.delete_all_wallets(lambda: ui.rebuild(root), config.get("show_toasts", True))) # bind delete key to delete all saved wallets
 
 def main(): # main function to start the application
     global root # use the global root variable
