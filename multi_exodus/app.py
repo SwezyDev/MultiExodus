@@ -1,7 +1,8 @@
-from . import wallet_manager, ui, info, settings, update, motd, tray, constants, rpc # import necessary modules
+from . import wallet_manager, ui, info, settings, update, motd, tray, constants, rpc, protection # import necessary modules
 from collections import defaultdict # for defaultdict
 from .toast import show_toast # for showing toast notifications
 from datetime import datetime # for date and time handling
+from PIL import Image # for loading images
 import customtkinter # for custom tkinter widgets
 import threading # for threading
 import ctypes # for windows api calls
@@ -197,7 +198,10 @@ def animation(label, root, step=0, max_steps=100): # function for smooth color t
 def load_app(root, pre_frame): # function to load the main application
     pre_check() # heavy work
     time.sleep(2) # simulate loading time
-    root.after(0, create_app, root, pre_frame)  # switch back to UI thread
+    if protection.is_encrypted(): # check if wallets are encrypted
+        decrypt_app(pre_frame)
+    else:
+        root.after(0, create_app, root, pre_frame)  # switch back to UI thread
 
 def bind_keybinds(root, first_wallet): # function to bind keybinds to the root window
     with open(constants.INFO_PATH, "r", encoding="utf-8") as f: # load info text from file
@@ -212,6 +216,7 @@ def bind_keybinds(root, first_wallet): # function to bind keybinds to the root w
     root.bind("<F4>", lambda e: update.check_updates(msg_box=True, config=config)) # bind F4 to check for updates
     root.bind("<F5>", lambda e: ui.rebuild(root, extra=False)) # bind F5 key to refresh the wallets ui
     root.bind("m", lambda e: motd.MotdPopup(root, title="Message of the Day", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")) # bind m key to show message of the day popup
+    root.bind("p", lambda e: ui.encrypt_now()) # bind p key to open encryption settings
     root.bind("+", lambda e: wallet_manager.add_wallet(root, lambda r=root: ui.build_wallets_ui(root, *wallet_manager.detect_wallets()), config.get("show_toasts", True))) # bind + key to add a new wallet
     root.bind("-", lambda e: wallet_manager.delete_wallet(first_wallet, ui.rebuild(root), config.get("show_toasts", True))) # bind - key to delete a wallet
     root.bind("*", lambda e: wallet_manager.load_wallet(first_wallet, config.get("show_toasts", True))) # bind * key to load a wallet
@@ -240,9 +245,66 @@ def main(): # main function to start the application
 
     root.mainloop() # start the main event loop
 
+def decrypt_app(pre_frame): # function to decrypt wallets on app startup
+    try: # attempt to destroy pre frame
+        pre_frame.destroy() # destroy pre frame
+    except: # ignore exceptions
+        pass # ignore if already destroyed
+
+    root.title("MultiExodus Decrypting Wallets...") # set window title
+
+    app_icon_image = Image.open(constants.APP_ICON) # load image using pil
+    multi_exodus_pic = customtkinter.CTkImage(light_image=app_icon_image, dark_image=app_icon_image, size=(100, 100)) # load MultiExodus logo
+    
+    multi_exodus_label = customtkinter.CTkLabel(root, image=multi_exodus_pic, text="", fg_color="#202020", bg_color="#202020") # create label for logo
+    multi_exodus_label.place(relx=0.5, rely=0.3, anchor="center") # place logo label
+
+    welcome_label = customtkinter.CTkLabel(root, text="Welcome back", fg_color="#202020", text_color="#FFFFFF", font=("Segoe UI", 24), bg_color="#202020") # create welcome label
+    welcome_label.place(relx=0.5, rely=0.4, anchor="center") # place welcome label
+
+    info_label = customtkinter.CTkLabel(root, text="Enter your password to continue", fg_color="#202020", text_color="#BEBEBE", font=("Segoe UI", 14), bg_color="#202020") # create info label
+    info_label.place(relx=0.5, rely=0.46, anchor="center") # place info label
+
+    password_entry = customtkinter.CTkEntry(root, width=304, height=35, fg_color="#414141", border_color="#414141", border_width=0.6, text_color="#FFFFFF", font=("Segoe UI", 14), show="*", placeholder_text="Type your password") # create password entry
+    password_entry.place(relx=0.5, rely=0.52, anchor="center") # place password entry
+
+    show_password_eye = customtkinter.CTkButton(root, width=30, height=32, fg_color="#414141", hover=False, text_color="#FFFFFF", corner_radius=0, font=("Segoe UI", 14), text="👁", command=lambda: toggle_vis(password_entry)) # create show password button
+    show_password_eye.place(relx=0.599, rely=0.52, anchor="center") # place show password button
+
+    def toggle_vis(entry): # function to toggle password visibility
+        if entry.cget("show") == "": # if password is currently visible
+            entry.configure(show="*") # hide the password
+            show_password_eye.configure(text="👁") # update button text
+        else: # if password is currently hidden
+            entry.configure(show="") # show the password
+            show_password_eye.configure(text="🙈") # update button text
+
+    forgot_password_label = customtkinter.CTkLabel(root, text="I lost my password", fg_color="#202020", text_color="#424242", font=("Segoe UI", 12, "underline"), cursor="hand2", bg_color="#202020") # create forgot password label
+    forgot_password_label.place(relx=0.5, rely=0.57, anchor="center") # place forgot password label
+
+    forgot_password_label.bind("<Button-1>", lambda e: protection.lost_password()) # bind click event to lost password handler
+
+    def decrypt_now(): # function to decrypt wallets when button is clicked
+        returns = protection.decrypt(password_entry.get()) # decrypt wallets with entered password
+        if returns: # if decryption was successful
+            root.after(0, create_app, root, pre_frame)  # switch back to UI thread
+        else: # if decryption failed
+            password_entry.delete(0, 'end') # clear password entry
+            password_entry.configure(border_color="#FF0000") # highlight password entry in red to indicate error
+
+    password_entry.bind("<Return>", lambda e: decrypt_now()) # bind enter key to decrypt function
+
+    password_entry.bind("<Enter>", lambda e: password_entry.configure(border_color="#414141")) # reset border color on focus
+
+    login_button = customtkinter.CTkButton(root, width=150, height=35, fg_color="#414141", hover_color="#2C2C2C", text_color="#FFFFFF", font=("Segoe UI", 16), text="Decrypt Wallets", command=decrypt_now) # create decrypt button
+    login_button.place(relx=0.5, rely=0.62, anchor="center") # place decrypt button
 
 def create_app(root, pre_frame): # function to create and run the MultiExodus application
-    pre_frame.destroy() # destroy pre frame
+    try: # attempt to destroy pre frame
+        pre_frame.destroy() # destroy pre frame
+    except: # ignore exceptions
+        pass # ignore if already destroyed
+
     names, count = wallet_manager.detect_wallets() # detect existing wallets
 
     first_wallet = names[0] if names else "" # get the first wallet name for delete binding
@@ -259,3 +321,11 @@ def create_app(root, pre_frame): # function to create and run the MultiExodus ap
     ui.build_wallets_ui(root, names, count) # build the wallets ui
 
     bind_keybinds(root, first_wallet) # bind keybinds
+
+def restart_app(): # function to restart the entire application
+    os.startfile(sys.executable) # fallback launch
+    os._exit(0) # exit the current instance
+
+def restart_app_admin(): # function to restart the application with admin privileges
+    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, None, None, 1) # relaunch with admin rights
+    os._exit(0) # exit the current instance

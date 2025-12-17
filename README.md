@@ -29,18 +29,18 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 
 * 💼 **Multi-Wallet Management** — Detect, search, star, add, edit, and delete multiple Exodus wallets in a single interface.
 * 🔄 **Seamless Wallet Switching** — Load any wallet into Exodus instantly with one click, without manual file handling.
+* 🔐 **Encryption/Decryption** — You wallet data is protected with military grade encryption (AES 256), makes it impossible for an attacker to steal your Data (Optional).
 * 🗂️ **Backup & Recovery Automation** — Automatically trigger Exodus recovery mode, backup existing wallets, and restore seed phrases safely.
 * 🖼️ **Custom Wallet Notes & Images** — Assign personalized names, notes, tags, and images to each wallet for easy identification.
 * 🔔 **Toast Notifications** — Instant, non-intrusive alerts for everything in MultiExodus, and background tasks—always keeping you informed without interruptions.
 * 📊 **Organized UI** — Scrollable, grid-based OR List layout with clean, sortable, interactive frames built using CustomTkinter.
 * ✅ **Safety Prompts** — Confirmation dialogs for sensitive actions like deleting or overwriting wallets to prevent accidental loss.
 * ⭐ **Auto-Updater** — Automatically checks for new versions, verifies integrity with SHA-256, downloads updates securely, and installs them with one click.
-* 🖥 **Discord RPC** — Show your friends that you're using MultiExodus
+* 🖥 **Discord RPC** — Show your friends that you're using MultiExodus.
 
 ---
 
 ## 🕒 Todo (Planned Features)
-* 🔐 Add **Protection** (Wallet Data Encryption/Decryption) — Next Update
 * 🎉 Add **Color** Customization — Maybe next Update
 * 🌐 Create a modern **Web-App** (Upgrade the GUI) — Unknown
 > 💡 View the `TODO` file in this repository.
@@ -57,6 +57,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * 🛜 **F4** — Check for Updates
 * 🔁 **F5** — Reload Wallets
 * 👋 **M** — Show Message of Today
+* 🔒 **P** — Encrypt Wallet Data
 * ➕ **+** — Add a Wallet
 * ➖ **-** — Delete the First Wallet
 * 📥 * — Load First Wallet

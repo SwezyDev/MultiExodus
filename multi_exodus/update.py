@@ -1,5 +1,6 @@
 from .constants import GITHUB_REPO # import the github repository constant
 from .toast import show_toast # for showing toast notifications
+from . import app # import the app module
 import requests # for making http requests
 import hashlib # for sha256 hashing
 import ctypes # for Windows message boxes
@@ -25,8 +26,7 @@ def check_updates(msg_box, config): # function to check for updates
                 if not ctypes.windll.shell32.IsUserAnAdmin(): # if not running as admin
                     user_response2 = ctypes.windll.user32.MessageBoxW(0, f"Failed to download the latest version of MultiExodus.\n\nWant to retry as administrator?", "MultiExodus", 0x04 | 0x10) # show error message box
                     if user_response2 == 6: # if user clicked "Yes"
-                        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, None, None, 1) # restart the application as admin
-                        os._exit(0) # exit the current instance
+                        app.restart_app_admin() # restart the app as admin to retry download
                 ctypes.windll.user32.MessageBoxW(0, f"Failed to download the latest version of MultiExodus.\n\nPlease visit the GitHub page to download it manually.\nhttps://github.com/{GITHUB_REPO}", "MultiExodus", 0x10) # show error message box
                 os.system("start https://github.com/{GITHUB_REPO}") # open GitHub page
             os._exit(0) # exit the application to allow user to run the new version
