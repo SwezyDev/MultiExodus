@@ -18,6 +18,8 @@ F2: Show Settings Menu
 F3: Show Data Folder
 F4: Check for Updates
 F5: Reload Wallets
+M: Show Message of Today
+P: Encrypt Wallet Data
 +: Add a Wallet
 -: Delete the First Wallet
 *: Load First Wallet

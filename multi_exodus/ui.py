@@ -3,9 +3,10 @@ from CTkToolTip import CTkToolTip # for tooltips
 from .settings import read_config # for reading settings configuration
 from .tray import restart_tray # for restarting the tray icon
 from .rpc import restart_rpc # for restarting the rpc server
-from . import wallet_manager # for wallet management functions
+from . import wallet_manager, protection, app # for wallet management functions and protection functions
 from PIL import Image # for image handling
 import customtkinter # for custom tkinter widgets
+import ctypes # for Windows message boxes
 
 scroll_frame = None # global variable to hold the scrollable frame
 search_frame = None # global variable to hold the search frame
@@ -29,6 +30,28 @@ def toggle_layout(): # function to toggle between grid and list layout
     layout_mode = "list" if layout_mode == "grid" else "grid" # toggle layout mode
     layout_button.configure(text="☷" if layout_mode == "list" else "☰") # update button text
     on_search()  # rerender with the new layout
+
+def encrypt_now(): # function to open encryption settings
+    config = read_config() # read settings configuration
+    
+    name, count = wallet_manager.detect_wallets() # detect wallets
+    if count == 0: # if no wallet data exists
+        ctypes.windll.user32.MessageBoxW(0, "You don't have any saved Wallets. There is nothing to Encrypt.", "MultiExodus", 0x30) # show error message box
+        return # exit the function
+    
+    returns = protection.encrypt() # call the encrypt function
+    if returns and not returns in ["doesnt match", "cancel"]: # if encryption was successful
+        ctypes.windll.user32.MessageBoxW(0, "All wallets have been successfully encrypted.", "MultiExodus", 0x40) # show success message box
+        if config.get("show_toasts", True): # if toasts are enabled in setting
+            wallet_manager.show_toast("MultiExodus", "All wallets have been successfully encrypted.") # show success toast
+        
+        app.restart_app()
+    elif returns == False and not returns in ["doesnt match", "cancel"]: # if encryption failed or was aborted
+        ctypes.windll.user32.MessageBoxW(0, "Wallet encryption failed or was aborted.", "MultiExodus", 0x30) # show failure message box
+        if config.get("show_toasts", True): # if toasts are enabled in setting
+            wallet_manager.show_toast("MultiExodus", "Wallet encryption failed or was aborted.") # show failure toast
+    else: # if passwords do not match
+        pass # do nothing if passwords do not match
 
 def build_wallets_ui(root, names, count): # function to build the wallets ui
     global scroll_frame, search_frame, wallet_cache, layout_mode, layout_button, on_search # use the global scroll_frame, search_frame variables
@@ -73,6 +96,17 @@ def build_wallets_ui(root, names, count): # function to build the wallets ui
     layout_button.place(x=285, y=10) # place the layout toggle button next to the search bar
 
     wallet_cache = list(names) # populate wallet_cache with wallet names
+
+    encrypt_button = customtkinter.CTkButton( # create a button to open encryption settings
+        master=root, text="🔒",
+        width=35, height=30,
+        fg_color="#2C2C2C", hover_color="#414141",
+        border_color="#414141", border_width=0.6,
+        corner_radius=8,
+        font=("Segoe UI", 16),
+        command=encrypt_now
+    )
+    encrypt_button.place(x=1315, y=10) # place the encryption settings button next to the layout toggle button
 
     def sort_wallets_by_star(wallet_list): # function to sort wallets with starred ones first
         starred = [] # list for starred wallets

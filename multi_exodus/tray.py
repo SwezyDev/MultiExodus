@@ -23,16 +23,17 @@ def create(root, first_wallet): # function to create the system tray icon and me
 
     menu = pystray.Menu( # create the tray menu
         pystray.MenuItem("Show MultiExodus", lambda: root.after(0, root.deiconify)),
-        pystray.MenuItem("────────────────", lambda: None, enabled=False),
+        pystray.MenuItem("────────────────", action=None, enabled=False),
         pystray.MenuItem("Show Information", lambda: info.InfoPopup(root, title="Multi Exodus Information", text=info_text, text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")),
         pystray.MenuItem("Check for Updates", lambda: update.check_updates(msg_box=True, config=config)),
         pystray.MenuItem("Refresh Wallets UI", lambda: ui.rebuild(root, extra=False)),
-        pystray.MenuItem("────────────────", lambda: None, enabled=False),
+        pystray.MenuItem("Encrypt Wallets", lambda: ui.encrypt_now()),
+        pystray.MenuItem("────────────────", action=None, enabled=False),
         pystray.MenuItem("Add New Wallet", lambda: wallet_manager.add_wallet(root, lambda r=root: ui.build_wallets_ui(root, *wallet_manager.detect_wallets()), config.get("show_toasts", True))),
         pystray.MenuItem("Load First Wallet", lambda: wallet_manager.load_wallet(first_wallet, config.get("show_toasts", True))),
         pystray.MenuItem("Delete First Wallet", lambda: wallet_manager.delete_wallet(first_wallet, lambda: ui.rebuild(root), config.get("show_toasts", True))),
         pystray.MenuItem("Delete All Wallets", lambda: wallet_manager.delete_all_wallets(lambda: ui.rebuild(root), config.get("show_toasts", True))),
-        pystray.MenuItem("────────────────", lambda: None, enabled=False),
+        pystray.MenuItem("────────────────", action=None, enabled=False),
         pystray.MenuItem("Open Data Location", lambda: wallet_manager.open_data_location()),
         pystray.MenuItem("Show Message of the Day", lambda: motd.MotdPopup(root, title="Message of the Day", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")),
         pystray.MenuItem("Settings", lambda: settings.SettingsPopup(root, title="Multi Exodus Settings", text_color="#FFFFFF", fg_color="#202020", scroll_fg="#202020", scroll_bc="#414141")),
@@ -47,6 +48,7 @@ def create(root, first_wallet): # function to create the system tray icon and me
         "MultiExodus",
         menu
     )
+    
     tray_icon = icon # assign to global variable
 
     threading.Thread(target=icon.run, daemon=True).start() # run the tray icon in a separate thread
