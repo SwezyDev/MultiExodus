@@ -183,6 +183,7 @@ You can see that a file was created by Exodus called `restore-mnemonic` in the `
 * Validates the running executable with `SHA-256`, checks GitHub for newer releases, downloads the latest installer, and launches it using `os.startfile`.
 * Connects to Discord RPC via `pypresence` using the `Application ID` from the discord developer portal.
 * Uses `win10toast` for Windows Toast Notifications.
+* To encrypt wallet data it uses `cryptography (Fernet)` with `AES-256` Encryption.
 
 ---
 
