@@ -130,6 +130,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 │ ├─ dialogs.py ➔ Custom input dialog for user prompts
 │ ├─ info.py ➔ Custom Information box
 │ ├─ motd.py ➔ Custom Message of the Day box
+│ ├─ protection.py ➔ Encryption/Decryption Functions to protect Wallet Data
 │ ├─ rpc.py ➔ Discord RPC handling
 │ ├─ settings.py ➔ Custom Settings box to configure MultiExodus
 │ ├─ toast.py ➔ Windows Toast Notification handle
