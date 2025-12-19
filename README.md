@@ -19,9 +19,9 @@
 
 **MultiExodus** is a Python-based utility designed to **manage multiple Exodus wallets**. It allows users to import, backup, edit, and switch wallets through a clean and intuitive **graphical interface** built with CustomTkinter.
 
-The application provides features such as **wallet detection**, **seed phrase recovery automation**, **image and note customization**, **Discord RPC**, **custom sorting** and **one-click wallet loading into Exodus**. Each wallet is stored in a dedicated folder, enabling safe backups and easy organization. The program also implements **confirmation dialogs and automated restoration triggers** to ensure safe wallet operations.
+The application provides a comprehensive set of features including **wallet detection**, **seed phrase recovery automation**, **image and note customization**, **wallet tags and search**, **layout toggle (grid/list view)**, **Discord RPC**, **system tray integration**, and **custom sorting**. It enables **one-click wallet loading into Exodus** with each wallet stored in a dedicated folder for safe backups and easy organization. The program also implements **confirmation dialogs and automated restoration triggers** to ensure safe wallet operations.
 
-MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet management**, and **scrollable, sortable, grid-based UI frames** for efficient display and interaction with multiple wallets.
+MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet management**, **real-time search functionality**, and **scrollable, sortable, grid-based or list-based UI frames** for efficient display and interaction with multiple wallets.
 
 ---
 
@@ -32,8 +32,15 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * 🔐 **Encryption/Decryption** — You wallet data is protected with military grade encryption (AES 256), makes it impossible for an attacker to steal your Data (Optional).
 * 🗂️ **Backup & Recovery Automation** — Automatically trigger Exodus recovery mode, backup existing wallets, and restore seed phrases safely.
 * 🖼️ **Custom Wallet Notes & Images** — Assign personalized names, notes, tags, and images to each wallet for easy identification.
+* 🏷️ **Wallet Tags & Search** — Organize wallets with custom tags (up to 5 per wallet) and quickly search by wallet name or tag.
 * 🔔 **Toast Notifications** — Instant, non-intrusive alerts for everything in MultiExodus, and background tasks—always keeping you informed without interruptions.
-* 📊 **Organized UI** — Scrollable, grid-based OR List layout with clean, sortable, interactive frames built using CustomTkinter.
+* 📊 **Organized UI** — Scrollable, grid-based or list layout with clean, sortable, interactive frames built using CustomTkinter.
+* 🔀 **Layout Toggle** — Switch between grid view and list view instantly with a single click or keyboard shortcut (ALT_L).
+* 📋 **Multiple Sort Options** — Sort wallets by creation date (Oldest/Newest First) or alphabetically (A-Z/Z-A).
+* 💫 **System Tray Integration** — Minimize to tray with full context menu for quick access to all features without opening the main window.
+* 🎯 **Single Instance Check** — Prevents multiple instances from running and automatically focuses existing window if launched again.
+* 🖱️ **Tooltips** — Hover over any wallet to see detailed information including creation date, notes, tags, and file paths.
+* 🎨 **Customizable Window Title** — Personalize the window title with dynamic variables like wallet count, time, date, username, computer name, Exodus version, and message of the day.
 * ✅ **Safety Prompts** — Confirmation dialogs for sensitive actions like deleting or overwriting wallets to prevent accidental loss.
 * ⭐ **Auto-Updater** — Automatically checks for new versions, verifies integrity with SHA-256, downloads updates securely, and installs them with one click.
 * 🖥 **Discord RPC** — Show your friends that you're using MultiExodus.
@@ -74,18 +81,22 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ## 🧭 How It Works
 
 1. Run the application (`python main.py`).
-   MultiExodus will create or use your existing MultiExodus directory.
-2. Browse your wallets in the scrollable grid UI.
-   Each wallet appears with its name, image, note, and action buttons.
+   MultiExodus will create or use your existing MultiExodus directory. The app checks for updates automatically (unless bypassed in settings) and ensures only one instance runs at a time.
+2. Browse your wallets in the scrollable grid or list UI.
+   Each wallet appears with its name, image, note, tags, and action buttons. Use the search bar to filter wallets by name or tags.
 3. Choose an action:
    * ➕ **Add Wallet** — Triggers Exodus' built‑in recovery mode, lets you enter your seed phrase, and then saves the restored wallet under a custom name.
    * 📥 **Load Wallet** — Copies the selected wallet into the official Exodus directory and starts Exodus automatically.
    * 📂 **Open Wallet Location** — Open the Location where your wallet is saved.
-   * ⭐ **Star Wallet** — Display your Favorite wallet at the first place
+   * ⭐ **Star Wallet** — Display your Favorite wallet at the first place.
+   * 🏷️ **Add/Edit Tags** — Click on the tags area to add or edit wallet tags (up to 5 tags per wallet).
+   * 🔀 **Toggle Layout** — Switch between grid and list view using the button or ALT_L key.
 4. Changes are applied instantly, and the UI rebuilds itself to reflect your updated wallet list.
    * ✏️ **Edit Wallet** — Click on the wallet name, note, or image to rename it, change its description, or assign a custom PNG preview.
    * 🗑️ **Delete Wallet** — Removes the wallet folder after confirmation.
-4. Changes are applied instantly, and the UI rebuilds itself to reflect your updated wallet list.
+   * 🖱️ **Hover for Info** — Hover over any wallet to see detailed information in a tooltip.
+5. Access quick actions via the System Tray icon when the window is minimized.
+   * Right-click the tray icon for a full menu with all major features.
 
 > ✅ Wallets are stored as separate folders inside your MultiExodus directory. Loading a wallet replaces the active Exodus wallet files — always make backups when needed.
 
@@ -171,19 +182,25 @@ You can see that a file was created by Exodus called `restore-mnemonic` in the `
 
 ## ⚙️ Technical Details
 
-* Detects wallets by scanning `MULTI_WALLET_DIR` and sorting by creation time.
-* Allows adding, renaming, editing notes/images, deleting, and loading wallets into Exodus.
+* Detects wallets by scanning `MULTI_WALLET_DIR` and sorting by creation time, alphabetically, or by starred status.
+* Allows adding, renaming, editing notes/images/tags, deleting, and loading wallets into Exodus.
 * Backs up current Exodus wallet before importing new wallets using the restore-mnemonic trigger.
-* Custom UI with `customtkinter`, including scrollable grid, interactive buttons, and labels.
+* Custom UI with `customtkinter`, including scrollable grid/list views, interactive buttons, search bar, and labels.
 * Loads and resizes wallet images with `PIL`, with optional rounded corners.
 * Uses `MyInputDialog` for custom modal input prompts.
 * Manages Exodus.exe with `ctypes` message boxes, `os.startfile`, and `taskkill`.
 * Performs file operations using `shutil` and `pathlib`.
-* Updates window title with wallet count and current time via a `background thread`.
+* Updates window title with dynamic variables (wallet count, time, date, username, computer name, Exodus version, MOTD) via a `background thread`.
 * Validates the running executable with `SHA-256`, checks GitHub for newer releases, downloads the latest installer, and launches it using `os.startfile`.
 * Connects to Discord RPC via `pypresence` using the `Application ID` from the discord developer portal.
 * Uses `win10toast` for Windows Toast Notifications.
 * To encrypt wallet data it uses `cryptography (Fernet)` with `AES-256` Encryption.
+* System tray integration with `pystray` for background operation and quick access menu.
+* Single instance enforcement with `psutil` to prevent multiple app instances from running simultaneously.
+* Wallet search functionality filters by wallet name and tags in real-time.
+* Tag system allows up to 5 tags per wallet for better organization, stored in `tags.txt` files.
+* Layout toggle feature switches between grid (5 columns) and list (single column) view modes.
+* Wallet starring system stores favorite status in `starred.txt` files and prioritizes starred wallets in the UI.
 
 ---
 
