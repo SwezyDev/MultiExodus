@@ -19,7 +19,7 @@
 
 **MultiExodus** is a Python-based utility designed to **manage multiple Exodus wallets**. It allows users to import, backup, edit, and switch wallets through a clean and intuitive **graphical interface** built with CustomTkinter.
 
-The application provides features such as **wallet detection**, **seed phrase recovery automation**, **image and note customization**, **wallet tags and search**, **layout toggle (grid/list view)**, **Discord RPC**, **system tray integration**, **custom sorting**, and **one-click wallet loading into Exodus**. Each wallet is stored in a dedicated folder, enabling safe backups and easy organization. The program also implements **confirmation dialogs and automated restoration triggers** to ensure safe wallet operations.
+The application provides a comprehensive set of features including **wallet detection**, **seed phrase recovery automation**, **image and note customization**, **wallet tags and search**, **layout toggle (grid/list view)**, **Discord RPC**, **system tray integration**, and **custom sorting**. It enables **one-click wallet loading into Exodus** with each wallet stored in a dedicated folder for safe backups and easy organization. The program also implements **confirmation dialogs and automated restoration triggers** to ensure safe wallet operations.
 
 MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet management**, **real-time search functionality**, and **scrollable, sortable, grid-based or list-based UI frames** for efficient display and interaction with multiple wallets.
 
@@ -34,7 +34,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 * 🖼️ **Custom Wallet Notes & Images** — Assign personalized names, notes, tags, and images to each wallet for easy identification.
 * 🏷️ **Wallet Tags & Search** — Organize wallets with custom tags (up to 5 per wallet) and quickly search by wallet name or tag.
 * 🔔 **Toast Notifications** — Instant, non-intrusive alerts for everything in MultiExodus, and background tasks—always keeping you informed without interruptions.
-* 📊 **Organized UI** — Scrollable, grid-based OR list layout with clean, sortable, interactive frames built using CustomTkinter.
+* 📊 **Organized UI** — Scrollable, grid-based or list layout with clean, sortable, interactive frames built using CustomTkinter.
 * 🔀 **Layout Toggle** — Switch between grid view and list view instantly with a single click or keyboard shortcut (ALT_L).
 * 📋 **Multiple Sort Options** — Sort wallets by creation date (Oldest/Newest First) or alphabetically (A-Z/Z-A).
 * 💫 **System Tray Integration** — Minimize to tray with full context menu for quick access to all features without opening the main window.
