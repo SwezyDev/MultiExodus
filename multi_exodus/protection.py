@@ -49,10 +49,10 @@ def encrypt(): # encrypt all wallet files using the given password
         cipher = Fernet(key) # create Fernet cipher with derived key
 
 
-        verify_path = wallet_dir / _VERIFICATION_FILE
-        encrypted_marker = cipher.encrypt(_VERIFICATION_MARKER)
-        with open(verify_path, 'wb') as f:
-            f.write(encrypted_marker)
+        verify_path = wallet_dir / _VERIFICATION_FILE # path to the verification file
+        encrypted_marker = cipher.encrypt(_VERIFICATION_MARKER) # encrypt the verification marker
+        with open(verify_path, 'wb') as f: # create the verification file
+            f.write(encrypted_marker) # write encrypted marker to file
 
         for p in wallet_dir.rglob('*'): # iterate over all files in the wallet directory
             if p.is_file() and p.name != _VERIFICATION_FILE and p.parent != wallet_dir: # only encrypt files inside subfolders

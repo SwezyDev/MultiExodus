@@ -199,9 +199,9 @@ def load_app(root, pre_frame): # function to load the main application
     pre_check() # heavy work
     time.sleep(2) # simulate loading time
     if protection.is_encrypted(): # check if wallets are encrypted
-        decrypt_app(pre_frame)
+        decrypt_app(pre_frame) # prompt for decryption
     else:
-        root.after(0, create_app, root, pre_frame)  # switch back to UI thread
+        root.after(0, create_app, root, pre_frame) # switch back to UI thread
 
 def bind_keybinds(root, first_wallet): # function to bind keybinds to the root window
     with open(constants.INFO_PATH, "r", encoding="utf-8") as f: # load info text from file
