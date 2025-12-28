@@ -60,7 +60,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ## 🕒 Todo (Planned Features)
 * 🎉 Add **Color** Customization — Maybe next Update
 * 🌐 Create a modern **Web-App** (Upgrade the GUI) — Unknown
-> 💡 View the `TODO` file in this repository.
+> 💡 View the [`TODO`](https://github.com/SwezyDev/MultiExodus/blob/main/TODO) file in this repository.
 
 ---
 
@@ -216,7 +216,7 @@ You can see that a file was created by Exodus called `restore-mnemonic` in the `
 
 ## ⚖️ License
 
-Distributed under the **MIT License**. See `LICENSE` for more information.
+Distributed under the **MIT License**. See [`LICENSE`](https://github.com/SwezyDev/MultiExodus/blob/main/LICENSE) for more information.
 
 ---
 
