@@ -25,6 +25,16 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 
 ---
 
+## 🤝 Trust & Security
+> [!IMPORTANT]
+> **Why should you trust MultiExodus with something as sensitive as your wallets?**
+> 
+> It's very good that you ask yourself this question, please read the [`SAFETY.md`](https://github.com/SwezyDev/MultiExodus/blob/main/SAFETY.md) file
+
+
+
+---
+
 ## ✨ Features
 
 * 💼 **Multi-Wallet Management** — Detect, search, star, add, edit, and delete multiple Exodus wallets in a single interface.
