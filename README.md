@@ -81,7 +81,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
 ---
 
 ## 📥 Easy Installation
-1. Download the Installer from the [Release Tab](https://github.com/SwezyDev/MultiExodus/releases)
+1. Download the Installer from the Release Tab
 2. Follow the Installer Instructions
 3. Run Multi Exodus
 
