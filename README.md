@@ -1,5 +1,4 @@
 <h1 align="center">
-  <a href="https://multiexodus.vercel.app" target="_blank" style="text-decoration: none; color: inherit;">
     💰 Multi Exodus 💰
   </a>
 </h1>
@@ -120,7 +119,7 @@ MultiExodus leverages **PIL for image handling**, **OS-level commands for wallet
   ```bash
   pip install customtkinter CTkToolTip Pillow psutil pypresence pystray requests
   ```
-* 💻 [Exodus](https://www.exodus.com/download) installed and working.
+* 💻 Exodus Wallet installed and working.
 * 💾 Access to your Exodus installation directory and multi-wallet folder (ensure the app has permission to read/write files).
 * 🖼️ Optional: PNG images for custom wallet previews. (Recommended size: 130x130)
 
